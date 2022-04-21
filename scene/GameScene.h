@@ -55,12 +55,25 @@ class GameScene {
 	Model* model_ = nullptr;
 
 	//ワールドトランスフォーム
-	WorldTransform worldTransform_[100];
+	WorldTransform worldTransform_[9];
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
 	//カメラ上方向の角度
 	float viewAngle = 0.0f;
+
+	//パーツID
+	enum PartID {
+		Root,	//大元:1
+		Spine,	//脊椎:2
+		Chest,	//胸:3
+		Head,	//頭:4
+		ArmL,	//左腕:5
+		ArmR,	//右腕:6
+		Hip,	//尻:7
+		LegL,	//左足:8
+		LegR,	//右足:9
+	};
 
 	/// <summary>
 	/// ゲームシーン用

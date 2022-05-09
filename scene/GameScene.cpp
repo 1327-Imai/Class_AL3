@@ -140,7 +140,7 @@ void GameScene::Initialize() {
 
 	//原点まで移動する(現在の座標から原点からの距離を引く)
 	for (int i = 0; i < 8; i++) {
-		//vertex[i] -= distanceFromOrigin;
+		vertex[i] -= distanceFromOrigin;
 	}
 
 	//アフィン変換をする

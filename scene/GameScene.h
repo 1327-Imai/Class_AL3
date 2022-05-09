@@ -92,7 +92,7 @@ private: // メンバ変数
 	float scaleZ = 2.0f;
 	float angleX = -PI / 4;
 	float angleY = PI / 4;
-	float angleZ = PI / 6;
+	float angleZ = PI / 4;
 
 
 	Matrix4 affineTransrate = {

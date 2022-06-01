@@ -2,15 +2,10 @@
 #include "TextureManager.h"
 #include <cassert>
 
-using namespace DirectX;
-
 GameScene::GameScene() {
 }
 
 GameScene::~GameScene() {
-	delete model_;
-	delete debugCamera_;
-	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -30,10 +25,10 @@ void GameScene::Initialize() {
 	viewProjection_.Initialize();
 
 	//デバッグカメラの生成
-	debugCamera_ = new DebugCamera(1280,720);
+	debugCamera_ = new DebugCamera(1280 , 720);
 
 	player_ = new Player();
-	player_->Initialize(model_,textureHandle_);
+	player_->Initialize(model_ , textureHandle_);
 }
 
 void GameScene::Update() {
@@ -41,6 +36,7 @@ void GameScene::Update() {
 	debugCamera_->Update();
 
 	player_->Update();
+
 }
 
 void GameScene::Draw() {
@@ -69,7 +65,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	// 3Dモデル描画
+
 	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理

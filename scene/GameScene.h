@@ -2,16 +2,15 @@
 
 #include "Audio.h"
 #include "AxisIndicator.h"
-#include "DebugText.h"
-#include "DebugCamera.h"
 #include "DirectXCommon.h"
+#include "DebugCamera.h"
+#include "DebugText.h"
 #include "Input.h"
 #include "Model.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include <DirectXMath.h>
 
 #include "Player.h"
 
@@ -45,8 +44,7 @@ class GameScene {
 	/// 描画
 	/// </summary>
 	void Draw();
-
-  private: // メンバ変数
+private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;

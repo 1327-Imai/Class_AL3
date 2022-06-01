@@ -1,7 +1,9 @@
 ﻿#pragma once
 
 #include "Audio.h"
+#include "AxisIndicator.h"
 #include "DebugText.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
@@ -10,6 +12,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <DirectXMath.h>
+
+#include "Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -47,6 +51,7 @@ class GameScene {
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	DebugText* debugText_ = nullptr;
+	DebugCamera* debugCamera_ = nullptr;
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
@@ -54,10 +59,10 @@ class GameScene {
 	// 3Dモデル
 	Model* model_ = nullptr;
 
-	//ワールドトランスフォーム
-	WorldTransform worldTransform_;
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
+
+	Player* player_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

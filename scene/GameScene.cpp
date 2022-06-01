@@ -9,6 +9,8 @@ GameScene::GameScene() {
 
 GameScene::~GameScene() {
 	delete model_;
+	delete debugCamera_;
+	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -24,44 +26,21 @@ void GameScene::Initialize() {
 	// 3Dモデルの生成
 	model_ = Model::Create();
 
-	// X,Y,Z方向のスケーリングを設定
-	worldTransform_.scale_ = { 5.0f, 5.0f, 5.0f };
-
-	// X,Y,Z軸周りの回転角を設定
-	worldTransform_.rotation_ = { XM_PI / 4.0f, XM_PI / 4.0f, 0.0f };
-
-	// X,Y,Z軸周りの平行移動を設定
-	worldTransform_.translation_ = { 10.0f, 10.0f, 10.0f };
-
-	//ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
+
+	//デバッグカメラの生成
+	debugCamera_ = new DebugCamera(1280,720);
+
+	player_ = new Player();
+	player_->Initialize(model_,textureHandle_);
 }
 
 void GameScene::Update() {
 
-	//デバッグテキストの表示
-	debugText_->SetPos(50, 70);
-	debugText_->Printf(
-		"transration:(%f,%f,%f)",
-		worldTransform_.translation_.x,
-		worldTransform_.translation_.y,
-		worldTransform_.translation_.z);
+	debugCamera_->Update();
 
-	debugText_->SetPos(50, 85);
-	debugText_->Printf(
-		"rotation:(%f,%f,%f)",
-		worldTransform_.rotation_.x,
-		worldTransform_.rotation_.y,
-		worldTransform_.rotation_.z);
-
-	debugText_->SetPos(50, 100);
-	debugText_->Printf(
-		"scale:(%f,%f,%f)",
-		worldTransform_.scale_.x,
-		worldTransform_.scale_.y,
-		worldTransform_.scale_.z);
+	player_->Update();
 }
 
 void GameScene::Draw() {
@@ -91,7 +70,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	// 3Dモデル描画
-	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

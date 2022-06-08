@@ -2,11 +2,9 @@
 #include "TextureManager.h"
 #include <cassert>
 
-GameScene::GameScene() {
-}
+GameScene::GameScene() {}
 
-GameScene::~GameScene() {
-}
+GameScene::~GameScene() {}
 
 void GameScene::Initialize() {
 
@@ -14,30 +12,9 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
-
-	//ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("mario.jpg");
-
-	// 3Dモデルの生成
-	model_ = Model::Create();
-
-	//ビュープロジェクションの初期化
-	viewProjection_.Initialize();
-
-	//デバッグカメラの生成
-	debugCamera_ = new DebugCamera(1280 , 720);
-
-	player_ = new Player();
-	player_->Initialize(model_ , textureHandle_);
 }
 
-void GameScene::Update() {
-
-	debugCamera_->Update();
-
-	player_->Update();
-
-}
+void GameScene::Update() {}
 
 void GameScene::Draw() {
 
@@ -65,8 +42,6 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-
-	player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

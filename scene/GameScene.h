@@ -7,6 +7,7 @@
 #include "DebugText.h"
 #include "Input.h"
 #include "Model.h"
+#include "PrimitiveDrawer.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
@@ -17,10 +18,10 @@
 /// </summary>
 class GameScene {
 
-  public: // メンバ関数
-	/// <summary>
-	/// コンストクラタ
-	/// </summary>
+public: // メンバ関数
+  /// <summary>
+  /// コンストクラタ
+  /// </summary>
 	GameScene();
 
 	/// <summary>
@@ -43,16 +44,24 @@ class GameScene {
 	/// </summary>
 	void Draw();
 
-  private: // メンバ変数
+	//ワールド変換行列を生成する関数
+	Matrix4 CreateMatWorld(Vector3 scale , Vector3 rotation , Vector3 translation);
+	Matrix4 CreateMatScale(Vector3 scale);
+	Matrix4 CreateMatRot(Vector3 rotation);
+	Matrix4 CreateMatTranslation(Vector3 translation);
+
+private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	DebugText* debugText_ = nullptr;
 
+	const float PI = 3.141592;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
-	 
+
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 

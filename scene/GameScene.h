@@ -1,7 +1,9 @@
 ﻿#pragma once
 
 #include "Audio.h"
+#include "AxisIndicator.h"
 #include "DirectXCommon.h"
+#include "DebugCamera.h"
 #include "DebugText.h"
 #include "Input.h"
 #include "Model.h"
@@ -50,4 +52,20 @@ class GameScene {
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	 
+	//テクスチャハンドル
+	uint32_t textureHandle_ = 0;
+
+	//3Dモデル
+	Model* model_ = nullptr;
+
+	//ワールドトランスフォーム
+	WorldTransform worldTransform_;
+
+	//ビュープロジェクション
+	ViewProjection viewProjection_;
+
+	//デバッグカメラ
+	DebugCamera* debugCamera_ = nullptr;
+
 };

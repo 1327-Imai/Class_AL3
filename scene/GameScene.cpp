@@ -4,7 +4,12 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() {
+
+	delete model_;
+	delete debugCamera_;
+
+}
 
 void GameScene::Initialize() {
 
@@ -12,6 +17,27 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
+
+	//ファイル名を指定してテクスチャを読み込む
+	textureHandle_ = TextureManager::Load("mario.jpg");
+
+	//3Dモデルの生成
+	model_ = Model::Create();
+
+	//ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
+
+	//ビュープロジェクションの初期化
+	viewProjection_.Initialize();
+
+	//デバッグカメラの生成
+	debugCamera_ = new DebugCamera(1280 , 720);
+
+	//軸方向の表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+
+	//軸方向表示が参考にするビュープロジェクションを設定する(アドレス渡し)
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 }
 
 void GameScene::Update() {}
@@ -42,6 +68,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	//3Dモデル描画
+	model_->Draw(worldTransform_ , debugCamera_->GetViewProjection() , textureHandle_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -60,6 +88,9 @@ void GameScene::Draw() {
 	//
 	// スプライト描画後処理
 	Sprite::PostDraw();
+
+	//デバッグカメラの更新
+	debugCamera_->Update();
 
 #pragma endregion
 }

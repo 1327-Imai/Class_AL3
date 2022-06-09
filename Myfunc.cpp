@@ -1,10 +1,8 @@
 #include "Myfunc.h"
 
-using namespace Myfunc;
-
 #pragma region//ワールド変換行列を生成する関数
 
-void SetMatScale(Matrix4& affineMat , Vector3 scale) {
+void Myfunc::SetMatScale(Matrix4& affineMat , Vector3 scale) {
 	//スケーリング行列を宣言
 	Matrix4 matScale = {
 		scale.x , 0 , 0 , 0 ,
@@ -17,7 +15,7 @@ void SetMatScale(Matrix4& affineMat , Vector3 scale) {
 
 }
 
-void SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
+void Myfunc::SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
 
 	//回転行列を宣言
 	Matrix4 matRotX = {
@@ -47,7 +45,7 @@ void SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
 
 }
 
-void SetMatTranslation(Matrix4& affineMat , Vector3 translation) {
+void Myfunc::SetMatTranslation(Matrix4& affineMat , Vector3 translation) {
 
 	Matrix4 matTranslation = {
 		1 , 0 , 0 , 0 ,

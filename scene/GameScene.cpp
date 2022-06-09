@@ -1,6 +1,7 @@
 ﻿#include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include <random>
 
 GameScene::GameScene() {}
 
@@ -24,12 +25,57 @@ void GameScene::Initialize() {
 	//3Dモデルの生成
 	model_ = Model::Create();
 
+	//乱数シード生成器
+	std::random_device seed_gen;
+	//メルセンヌ・ツイスターの乱数エンジン
+	std::mt19937_64 engine(seed_gen());
+	//乱数範囲の設定
+	std::uniform_real_distribution<float> rotDist(-PI , PI);
+	std::uniform_real_distribution<float> posDist(-10 , 10);
+
+#pragma region//worldTransform
 	//ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
+	for (WorldTransform& worldTransform_ : worldTransforms_) {
+		worldTransform_.Initialize();
+
+		//x,y,z方向のスケーリングを設定
+		worldTransform_.scale_ = {1 , 1 , 1};
+
+		//x,y,z方向の回転を設定
+		worldTransform_.rotation_ = {rotDist(engine) , rotDist(engine) , rotDist(engine)};
+
+		//x,y,z方向の平行移動を設定
+		worldTransform_.translation_ = {posDist(engine) , posDist(engine) , posDist(engine)};
+
+		worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
+
+		Matrix4 affineMat = MathUtility::Matrix4Identity();
+
+		Myfunc::SetMatScale(affineMat , worldTransform_.scale_);
+		Myfunc::SetMatRotation(affineMat , worldTransform_.rotation_);
+		Myfunc::SetMatTranslation(affineMat , worldTransform_.translation_);
+
+		worldTransform_.matWorld_ *= affineMat;
+
+		//行列の転送
+		worldTransform_.TransferMatrix();
+
+	}
+#pragma endregion
+
+#pragma region//viewProjection
+	//カメラ視点座標の設定
+	viewProjection_.eye = {0 , 0 , -50};
+
+	//カメラ注視点座標の設定
+	viewProjection_.target = {0 , 0 , 0};
+
+	//カメラ上方向ベクトルのを設定
+	viewProjection_.up = {0 , 1 , 0};
 
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
-
+#pragma endregion 
 	//デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280 , 720);
 
@@ -41,28 +87,101 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+#pragma region//viewProjection
 
-	//x,y,z方向のスケーリングを設定
-	worldTransform_.scale_ = {5 , 5 , 5};
+	//視点移動処理
+	{
+		Vector3 move = {0 , 0 , 0};
 
-	//x,y,z方向の回転を設定
-	worldTransform_.rotation_ = {PI / 4 , PI / 4 , 0};
+		//視点移動の速さ
+		const float kEyeSpeed = 0.2f;
 
-	//x,y,z方向の平行移動を設定
-	worldTransform_.translation_ = {10 , 10 , 10};
+		//押した方向で移動ベクトルの変更
+		if (input_->PushKey(DIK_W)) {
+			move.z += kEyeSpeed;
+		}
 
-	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
-	
-	Matrix4 affineMat = MathUtility::Matrix4Identity();
-	
-	Myfunc::SetMatScale(affineMat , worldTransform_.scale_);
-	Myfunc::SetMatRotation(affineMat , worldTransform_.rotation_);
-	Myfunc::SetMatTranslation(affineMat , worldTransform_.translation_);
+		if (input_->PushKey(DIK_S)) {
+			move.z -= kEyeSpeed;
+		}
 
-	worldTransform_.matWorld_ *= affineMat;
-	
-	//行列の転送
-	worldTransform_.TransferMatrix();
+		//視点移動
+		viewProjection_.eye += move;
+
+		//行列の再計算
+		viewProjection_.UpdateMatrix();
+
+		//デバッグ表示
+		debugText_->SetPos(50 , 50);
+		debugText_->Printf(
+			"eye:(%f,%f,%f)" ,
+			viewProjection_.eye.x ,
+			viewProjection_.eye.y ,
+			viewProjection_.eye.z
+		);
+	}
+
+	//上方向回転処理
+	{
+		Vector3 move = {0 , 0 , 0};
+
+		//上方向回転の速さ
+		const float kTargetSpeed = 0.2f;
+
+		//押した方向で移動ベクトルの変更
+		if (input_->PushKey(DIK_LEFT)) {
+			move.x -= kTargetSpeed;
+		}
+
+		if (input_->PushKey(DIK_RIGHT)) {
+			move.x += kTargetSpeed;
+		}
+
+		//上方向回転
+		viewProjection_.target += move;
+
+		//行列の再計算
+		viewProjection_.UpdateMatrix();
+
+		//デバッグ表示
+		debugText_->SetPos(50 , 65);
+		debugText_->Printf(
+			"target:(%f,%f,%f)" ,
+			viewProjection_.target.x ,
+			viewProjection_.target.y ,
+			viewProjection_.target.z
+		);
+	}
+
+	//上方向回転処理
+	{
+		//上方向回転の速さ
+		const float kUpRotSpeed = 0.05f;
+
+		//押した方向で移動ベクトルの変更
+		if (input_->PushKey(DIK_SPACE)) {
+			viewangle += kUpRotSpeed;
+			//2πを超えたら0に戻す
+			viewangle = fmodf(viewangle , PI * 2.0f);
+		}
+
+		//上方向回転
+		viewProjection_.up = {cosf(viewangle) , sinf(viewangle) , 0.0f};
+
+		//行列の再計算
+		viewProjection_.UpdateMatrix();
+
+		//デバッグ表示
+		debugText_->SetPos(50 , 80);
+		debugText_->Printf(
+			"up:(%f,%f,%f)" ,
+			viewProjection_.up.x ,
+			viewProjection_.up.y ,
+			viewProjection_.up.z
+		);
+	}
+
+#pragma endregion
 }
 
 void GameScene::Draw() {
@@ -92,8 +211,9 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	//3Dモデル描画
-	model_->Draw(worldTransform_ , debugCamera_->GetViewProjection() , textureHandle_);
-
+	for (WorldTransform& worldTransform_ : worldTransforms_) {
+		model_->Draw(worldTransform_ , viewProjection_ , textureHandle_);
+	}
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
@@ -113,7 +233,7 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 	//デバッグカメラの更新
-	debugCamera_->Update();
+	//debugCamera_->Update();
 
 #pragma endregion
 }

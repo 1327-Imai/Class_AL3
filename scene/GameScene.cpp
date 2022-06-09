@@ -64,14 +64,17 @@ void GameScene::Initialize() {
 #pragma endregion
 
 #pragma region//viewProjection
-	//カメラ視点座標の設定
-	viewProjection_.eye = {0 , 0 , -50};
+	//カメラ垂直方向視野角を設定
+	viewProjection_.fovAngleY = PI / 4;
 
-	//カメラ注視点座標の設定
-	viewProjection_.target = {0 , 0 , 0};
+	//アスペクト比を設定
+	//viewProjection_.aspectRatio = 1.0f;
 
-	//カメラ上方向ベクトルのを設定
-	viewProjection_.up = {0 , 1 , 0};
+	//ニアクリップ距離を設定
+	viewProjection_.nearZ = 52.0f;
+
+	//ファークリップ距離を設定
+	viewProjection_.nearZ = 53.0f;
 
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
@@ -89,27 +92,27 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 #pragma region//viewProjection
 
-	//視点移動処理
-	{
-		Vector3 move = {0 , 0 , 0};
+	////視点移動処理
+	//{
+	//	Vector3 move = {0 , 0 , 0};
 
-		//視点移動の速さ
-		const float kEyeSpeed = 0.2f;
+	//	//視点移動の速さ
+	//	const float kEyeSpeed = 0.2f;
 
-		//押した方向で移動ベクトルの変更
-		if (input_->PushKey(DIK_W)) {
-			move.z += kEyeSpeed;
-		}
+	//	//押した方向で移動ベクトルの変更
+	//	if (input_->PushKey(DIK_W)) {
+	//		move.z += kEyeSpeed;
+	//	}
 
-		if (input_->PushKey(DIK_S)) {
-			move.z -= kEyeSpeed;
-		}
+	//	if (input_->PushKey(DIK_S)) {
+	//		move.z -= kEyeSpeed;
+	//	}
 
-		//視点移動
-		viewProjection_.eye += move;
+	//	//視点移動
+	//	viewProjection_.eye += move;
 
-		//行列の再計算
-		viewProjection_.UpdateMatrix();
+	//	//行列の再計算
+	//	viewProjection_.UpdateMatrix();
 
 		//デバッグ表示
 		debugText_->SetPos(50 , 50);
@@ -119,29 +122,29 @@ void GameScene::Update() {
 			viewProjection_.eye.y ,
 			viewProjection_.eye.z
 		);
-	}
+	//}
 
-	//上方向回転処理
-	{
-		Vector3 move = {0 , 0 , 0};
+	////上方向回転処理
+	//{
+	//	Vector3 move = {0 , 0 , 0};
 
-		//上方向回転の速さ
-		const float kTargetSpeed = 0.2f;
+	//	//上方向回転の速さ
+	//	const float kTargetSpeed = 0.2f;
 
-		//押した方向で移動ベクトルの変更
-		if (input_->PushKey(DIK_LEFT)) {
-			move.x -= kTargetSpeed;
-		}
+	//	//押した方向で移動ベクトルの変更
+	//	if (input_->PushKey(DIK_LEFT)) {
+	//		move.x -= kTargetSpeed;
+	//	}
 
-		if (input_->PushKey(DIK_RIGHT)) {
-			move.x += kTargetSpeed;
-		}
+	//	if (input_->PushKey(DIK_RIGHT)) {
+	//		move.x += kTargetSpeed;
+	//	}
 
-		//上方向回転
-		viewProjection_.target += move;
+	//	//上方向回転
+	//	viewProjection_.target += move;
 
-		//行列の再計算
-		viewProjection_.UpdateMatrix();
+	//	//行列の再計算
+	//	viewProjection_.UpdateMatrix();
 
 		//デバッグ表示
 		debugText_->SetPos(50 , 65);
@@ -151,25 +154,25 @@ void GameScene::Update() {
 			viewProjection_.target.y ,
 			viewProjection_.target.z
 		);
-	}
+	//}
 
-	//上方向回転処理
-	{
-		//上方向回転の速さ
-		const float kUpRotSpeed = 0.05f;
+	////上方向回転処理
+	//{
+	//	//上方向回転の速さ
+	//	const float kUpRotSpeed = 0.05f;
 
-		//押した方向で移動ベクトルの変更
-		if (input_->PushKey(DIK_SPACE)) {
-			viewangle += kUpRotSpeed;
-			//2πを超えたら0に戻す
-			viewangle = fmodf(viewangle , PI * 2.0f);
-		}
+	//	//押した方向で移動ベクトルの変更
+	//	if (input_->PushKey(DIK_SPACE)) {
+	//		viewangle += kUpRotSpeed;
+	//		//2πを超えたら0に戻す
+	//		viewangle = fmodf(viewangle , PI * 2.0f);
+	//	}
 
-		//上方向回転
-		viewProjection_.up = {cosf(viewangle) , sinf(viewangle) , 0.0f};
+	//	//上方向回転
+	//	viewProjection_.up = {cosf(viewangle) , sinf(viewangle) , 0.0f};
 
-		//行列の再計算
-		viewProjection_.UpdateMatrix();
+	//	//行列の再計算
+	//	viewProjection_.UpdateMatrix();
 
 		//デバッグ表示
 		debugText_->SetPos(50 , 80);
@@ -178,6 +181,51 @@ void GameScene::Update() {
 			viewProjection_.up.x ,
 			viewProjection_.up.y ,
 			viewProjection_.up.z
+		);
+	//}
+
+	//fov変換処理
+	{
+		////上キーで視野が広がる
+		//if (input_->PushKey(DIK_UP)) {
+		//	if (viewProjection_.fovAngleY < PI) {
+		//		viewProjection_.fovAngleY += PI / 180;
+		//	}
+		//}
+		////下キーで視野が狭まる
+		//if (input_->PushKey(DIK_DOWN)) {
+		//	if (0 < viewProjection_.fovAngleY) {
+		//		viewProjection_.fovAngleY -= PI / 180;
+		//	}
+		//}
+
+		//viewProjection_.UpdateMatrix();
+
+		//デバッグ表示
+		debugText_->SetPos(50 , 95);
+		debugText_->Printf(
+			"fovAngleY(Degree):%f" ,
+			Myfunc::rad2dig(viewProjection_.fovAngleY)
+		);
+	}
+
+	//クリップ距離変更処理
+	{
+		//上下キーでクリップ距離を増減
+		if (input_->PushKey(DIK_UP)) {
+			viewProjection_.nearZ+=0.1f;
+		}
+		if (input_->PushKey(DIK_DOWN)) {
+			viewProjection_.nearZ-= 0.1f;
+		}
+
+		viewProjection_.UpdateMatrix();
+
+		//デバッグ表示
+		debugText_->SetPos(50 , 110);
+		debugText_->Printf(
+			"nearZ:%f" ,
+			viewProjection_.nearZ
 		);
 	}
 

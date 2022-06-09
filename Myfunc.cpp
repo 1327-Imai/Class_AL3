@@ -58,3 +58,23 @@ void Myfunc::SetMatTranslation(Matrix4& affineMat , Vector3 translation) {
 }
 
 #pragma endregion
+
+#pragma region//度数法⇔弧度法の関数
+
+float Myfunc::dig2rad(float dig) {
+
+	float PI = 3.141592;
+
+	return dig * PI / 180;
+
+}
+
+float Myfunc::rad2dig(float rad) {
+
+	float PI = 3.141592;
+
+	return rad / PI * 180;
+
+}
+
+#pragma endregion

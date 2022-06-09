@@ -19,4 +19,8 @@ namespace Myfunc {
 	void SetMatRotation(Matrix4& affineMat , Vector3 rotation);
 	void SetMatTranslation(Matrix4& affineMat , Vector3 translation);
 
+	//度数法⇔弧度法の関数
+	float dig2rad(float dig);
+	float rad2dig(float rad);
+
 }

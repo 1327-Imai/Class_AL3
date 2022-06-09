@@ -13,6 +13,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
+#include "Myfunc.h"
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -43,12 +45,6 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	void Draw();
-
-	//ワールド変換行列を生成する関数
-	Matrix4 CreateMatWorld(Vector3 scale , Vector3 rotation , Vector3 translation);
-	Matrix4 CreateMatScale(Vector3 scale);
-	Matrix4 CreateMatRot(Vector3 rotation);
-	Matrix4 CreateMatTranslation(Vector3 translation);
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;

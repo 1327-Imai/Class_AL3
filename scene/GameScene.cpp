@@ -25,6 +25,7 @@ void GameScene::Initialize() {
 	//3Dモデルの生成
 	model_ = Model::Create();
 
+#pragma region//乱数生成の下準備
 	//乱数シード生成器
 	std::random_device seed_gen;
 	//メルセンヌ・ツイスターの乱数エンジン
@@ -32,50 +33,21 @@ void GameScene::Initialize() {
 	//乱数範囲の設定
 	std::uniform_real_distribution<float> rotDist(-PI , PI);
 	std::uniform_real_distribution<float> posDist(-10 , 10);
+#pragma endregion
 
 #pragma region//worldTransform
 	//ワールドトランスフォームの初期化
-	for (WorldTransform& worldTransform_ : worldTransforms_) {
-		worldTransform_.Initialize();
+	//親(0番)
+	worldTransforms_[0].Initialize();
 
-		//x,y,z方向のスケーリングを設定
-		worldTransform_.scale_ = {1 , 1 , 1};
+	//子(1番)
+	worldTransforms_[1].Initialize();
+	worldTransforms_[1].translation_ = {0 , 4.5 , 0};
+	worldTransforms_[1].parent_ = &worldTransforms_[0];
 
-		//x,y,z方向の回転を設定
-		worldTransform_.rotation_ = {rotDist(engine) , rotDist(engine) , rotDist(engine)};
-
-		//x,y,z方向の平行移動を設定
-		worldTransform_.translation_ = {posDist(engine) , posDist(engine) , posDist(engine)};
-
-		worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
-
-		Matrix4 affineMat = MathUtility::Matrix4Identity();
-
-		Myfunc::SetMatScale(affineMat , worldTransform_.scale_);
-		Myfunc::SetMatRotation(affineMat , worldTransform_.rotation_);
-		Myfunc::SetMatTranslation(affineMat , worldTransform_.translation_);
-
-		worldTransform_.matWorld_ *= affineMat;
-
-		//行列の転送
-		worldTransform_.TransferMatrix();
-
-	}
 #pragma endregion
 
 #pragma region//viewProjection
-	//カメラ垂直方向視野角を設定
-	viewProjection_.fovAngleY = PI / 4;
-
-	//アスペクト比を設定
-	//viewProjection_.aspectRatio = 1.0f;
-
-	//ニアクリップ距離を設定
-	viewProjection_.nearZ = 52.0f;
-
-	//ファークリップ距離を設定
-	viewProjection_.nearZ = 53.0f;
-
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 #pragma endregion 
@@ -90,6 +62,48 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+#pragma region//worldTransform
+
+	{
+		//キャラクターの移動ベクトル
+		Vector3 move = {0 , 0 , 0};
+
+		float characterSpeed = 0.5f;
+
+		//左か右キーを押していたらmove(移動量)を変化させる
+		if (input_->PushKey(DIK_RIGHT)) {
+			move.x += characterSpeed;
+		}
+		if (input_->PushKey(DIK_LEFT)) {
+			move.x -= characterSpeed;
+		}
+
+		//moveを加算
+		worldTransforms_[0].translation_ += move;
+
+		//アフィン変換用の行列を宣言
+		Matrix4 affineMat = MathUtility::Matrix4Identity();
+
+		//ワールド行列の計算
+		Myfunc::SetMatTranslation(affineMat , worldTransforms_[0].translation_);
+		worldTransforms_[0].matWorld_ *= affineMat;
+
+		//行列の転送
+		worldTransforms_->TransferMatrix();
+
+		//デバッグ表示
+		debugText_->SetPos(50 , 50);
+		debugText_->Printf(
+			"Translation:(%f,%f,%f)" ,
+			worldTransforms_[0].translation_.x ,
+			worldTransforms_[0].translation_.y ,
+			worldTransforms_[0].translation_.z
+		);
+	}
+
+#pragma endregion
+
 #pragma region//viewProjection
 
 	////視点移動処理
@@ -114,14 +128,14 @@ void GameScene::Update() {
 	//	//行列の再計算
 	//	viewProjection_.UpdateMatrix();
 
-		//デバッグ表示
-	debugText_->SetPos(50 , 50);
-	debugText_->Printf(
-		"eye:(%f,%f,%f)" ,
-		viewProjection_.eye.x ,
-		viewProjection_.eye.y ,
-		viewProjection_.eye.z
-	);
+	//	デバッグ表示
+	//debugText_->SetPos(50 , 50);
+	//debugText_->Printf(
+	//	"eye:(%f,%f,%f)" ,
+	//	viewProjection_.eye.x ,
+	//	viewProjection_.eye.y ,
+	//	viewProjection_.eye.z
+	//);
 	//}
 
 	////上方向回転処理
@@ -146,14 +160,14 @@ void GameScene::Update() {
 	//	//行列の再計算
 	//	viewProjection_.UpdateMatrix();
 
-		//デバッグ表示
-	debugText_->SetPos(50 , 65);
-	debugText_->Printf(
-		"target:(%f,%f,%f)" ,
-		viewProjection_.target.x ,
-		viewProjection_.target.y ,
-		viewProjection_.target.z
-	);
+	//	デバッグ表示
+	//debugText_->SetPos(50 , 65);
+	//debugText_->Printf(
+	//	"target:(%f,%f,%f)" ,
+	//	viewProjection_.target.x ,
+	//	viewProjection_.target.y ,
+	//	viewProjection_.target.z
+	//);
 	//}
 
 	////上方向回転処理
@@ -174,62 +188,63 @@ void GameScene::Update() {
 	//	//行列の再計算
 	//	viewProjection_.UpdateMatrix();
 
-		//デバッグ表示
-	debugText_->SetPos(50 , 80);
-	debugText_->Printf(
-		"up:(%f,%f,%f)" ,
-		viewProjection_.up.x ,
-		viewProjection_.up.y ,
-		viewProjection_.up.z
-	);
+	//	デバッグ表示
+	//debugText_->SetPos(50 , 80);
+	//debugText_->Printf(
+	//	"up:(%f,%f,%f)" ,
+	//	viewProjection_.up.x ,
+	//	viewProjection_.up.y ,
+	//	viewProjection_.up.z
+	//);
 	//}
 
 	//fov変換処理
-	{
-		////上キーで視野が広がる
-		//if (input_->PushKey(DIK_UP)) {
-		//	if (viewProjection_.fovAngleY < PI) {
-		//		viewProjection_.fovAngleY += PI / 180;
-		//	}
-		//}
-		////下キーで視野が狭まる
-		//if (input_->PushKey(DIK_DOWN)) {
-		//	if (0 < viewProjection_.fovAngleY) {
-		//		viewProjection_.fovAngleY -= PI / 180;
-		//	}
-		//}
+	//{
+	//	//上キーで視野が広がる
+	//	if (input_->PushKey(DIK_UP)) {
+	//		if (viewProjection_.fovAngleY < PI) {
+	//			viewProjection_.fovAngleY += PI / 180;
+	//		}
+	//	}
+	//	//下キーで視野が狭まる
+	//	if (input_->PushKey(DIK_DOWN)) {
+	//		if (0 < viewProjection_.fovAngleY) {
+	//			viewProjection_.fovAngleY -= PI / 180;
+	//		}
+	//	}
 
-		//viewProjection_.UpdateMatrix();
+	//	viewProjection_.UpdateMatrix();
 
-		//デバッグ表示
-		debugText_->SetPos(50 , 95);
-		debugText_->Printf(
-			"fovAngleY(Degree):%f" ,
-			Myfunc::rad2dig(viewProjection_.fovAngleY)
-		);
-	}
+	//	デバッグ表示
+	//	debugText_->SetPos(50 , 95);
+	//	debugText_->Printf(
+	//		"fovAngleY(Degree):%f" ,
+	//		Myfunc::rad2dig(viewProjection_.fovAngleY)
+	//	);
+	//}
 
 	//クリップ距離変更処理
-	{
-		//上下キーでクリップ距離を増減
-		if (input_->PushKey(DIK_UP)) {
-			viewProjection_.nearZ += 0.1f;
-		}
-		if (input_->PushKey(DIK_DOWN)) {
-			viewProjection_.nearZ -= 0.1f;
-		}
+	//{
+	//	上下キーでクリップ距離を増減
+	//	if (input_->PushKey(DIK_UP)) {
+	//		viewProjection_.nearZ += 0.1f;
+	//	}
+	//	if (input_->PushKey(DIK_DOWN)) {
+	//		viewProjection_.nearZ -= 0.1f;
+	//	}
 
-		viewProjection_.UpdateMatrix();
+	//	viewProjection_.UpdateMatrix();
 
-		//デバッグ表示
-		debugText_->SetPos(50 , 110);
-		debugText_->Printf(
-			"nearZ:%f" ,
-			viewProjection_.nearZ
-		);
-	}
+	//	デバッグ表示
+	//	debugText_->SetPos(50 , 110);
+	//	debugText_->Printf(
+	//		"nearZ:%f" ,
+	//		viewProjection_.nearZ
+	//	);
+	//}
 
 #pragma endregion
+
 }
 
 void GameScene::Draw() {

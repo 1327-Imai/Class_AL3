@@ -15,8 +15,8 @@
 namespace Myfunc {
 
 	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ‚ğ¶¬‚·‚éŠÖ”
-	void setMatScale(Matrix4& affineMat , Vector3 scale);
-	void setMatRotation(Matrix4& affineMat , Vector3 rotation);
-	void setMatTranslation(Matrix4& affineMat , Vector3 translation);
+	void SetMatScale(Matrix4& affineMat , Vector3 scale);
+	void SetMatRotation(Matrix4& affineMat , Vector3 rotation);
+	void SetMatTranslation(Matrix4& affineMat , Vector3 translation);
 
 }

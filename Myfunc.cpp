@@ -4,7 +4,7 @@ using namespace Myfunc;
 
 #pragma region//ワールド変換行列を生成する関数
 
-void setMatScale(Matrix4& affineMat , Vector3 scale) {
+void SetMatScale(Matrix4& affineMat , Vector3 scale) {
 	//スケーリング行列を宣言
 	Matrix4 matScale = {
 		scale.x , 0 , 0 , 0 ,
@@ -17,7 +17,7 @@ void setMatScale(Matrix4& affineMat , Vector3 scale) {
 
 }
 
-void setMatRotation(Matrix4& affineMat , Vector3 rotation) {
+void SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
 
 	//回転行列を宣言
 	Matrix4 matRotX = {
@@ -47,7 +47,7 @@ void setMatRotation(Matrix4& affineMat , Vector3 rotation) {
 
 }
 
-void setMatTranslation(Matrix4& affineMat , Vector3 translation) {
+void SetMatTranslation(Matrix4& affineMat , Vector3 translation) {
 
 	Matrix4 matTranslation = {
 		1 , 0 , 0 , 0 ,

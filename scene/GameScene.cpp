@@ -55,9 +55,9 @@ void GameScene::Update() {
 	
 	Matrix4 affineMat = MathUtility::Matrix4Identity();
 	
-	Myfunc::setMatScale(affineMat , worldTransform_.scale_);
-	Myfunc::setMatRotation(affineMat , worldTransform_.rotation_);
-	Myfunc::setMatTranslation(affineMat , worldTransform_.translation_);
+	Myfunc::SetMatScale(affineMat , worldTransform_.scale_);
+	Myfunc::SetMatRotation(affineMat , worldTransform_.rotation_);
+	Myfunc::SetMatTranslation(affineMat , worldTransform_.translation_);
 
 	worldTransform_.matWorld_ *= affineMat;
 	

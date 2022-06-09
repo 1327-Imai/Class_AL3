@@ -115,13 +115,13 @@ void GameScene::Update() {
 	//	viewProjection_.UpdateMatrix();
 
 		//デバッグ表示
-		debugText_->SetPos(50 , 50);
-		debugText_->Printf(
-			"eye:(%f,%f,%f)" ,
-			viewProjection_.eye.x ,
-			viewProjection_.eye.y ,
-			viewProjection_.eye.z
-		);
+	debugText_->SetPos(50 , 50);
+	debugText_->Printf(
+		"eye:(%f,%f,%f)" ,
+		viewProjection_.eye.x ,
+		viewProjection_.eye.y ,
+		viewProjection_.eye.z
+	);
 	//}
 
 	////上方向回転処理
@@ -147,13 +147,13 @@ void GameScene::Update() {
 	//	viewProjection_.UpdateMatrix();
 
 		//デバッグ表示
-		debugText_->SetPos(50 , 65);
-		debugText_->Printf(
-			"target:(%f,%f,%f)" ,
-			viewProjection_.target.x ,
-			viewProjection_.target.y ,
-			viewProjection_.target.z
-		);
+	debugText_->SetPos(50 , 65);
+	debugText_->Printf(
+		"target:(%f,%f,%f)" ,
+		viewProjection_.target.x ,
+		viewProjection_.target.y ,
+		viewProjection_.target.z
+	);
 	//}
 
 	////上方向回転処理
@@ -175,13 +175,13 @@ void GameScene::Update() {
 	//	viewProjection_.UpdateMatrix();
 
 		//デバッグ表示
-		debugText_->SetPos(50 , 80);
-		debugText_->Printf(
-			"up:(%f,%f,%f)" ,
-			viewProjection_.up.x ,
-			viewProjection_.up.y ,
-			viewProjection_.up.z
-		);
+	debugText_->SetPos(50 , 80);
+	debugText_->Printf(
+		"up:(%f,%f,%f)" ,
+		viewProjection_.up.x ,
+		viewProjection_.up.y ,
+		viewProjection_.up.z
+	);
 	//}
 
 	//fov変換処理
@@ -213,10 +213,10 @@ void GameScene::Update() {
 	{
 		//上下キーでクリップ距離を増減
 		if (input_->PushKey(DIK_UP)) {
-			viewProjection_.nearZ+=0.1f;
+			viewProjection_.nearZ += 0.1f;
 		}
 		if (input_->PushKey(DIK_DOWN)) {
-			viewProjection_.nearZ-= 0.1f;
+			viewProjection_.nearZ -= 0.1f;
 		}
 
 		viewProjection_.UpdateMatrix();

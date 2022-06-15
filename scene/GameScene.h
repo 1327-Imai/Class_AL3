@@ -20,6 +20,22 @@
 /// </summary>
 class GameScene {
 
+public:
+	//パーツID
+	enum PartId {
+		kRoot ,		//大元
+		kSpine ,	//脊椎
+		kChest ,	//胸
+		kHead ,		//頭
+		kArm_L ,	//左腕
+		kArm_R ,	//右腕
+		kHip ,		//尻
+		kLeg_L ,	//左足
+		kLeg_R ,	//右足
+
+		kNumPartId
+	};
+
 public: // メンバ関数
   /// <summary>
   /// コンストクラタ
@@ -65,7 +81,7 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 
 	//ワールドトランスフォーム
-	WorldTransform worldTransforms_[2];
+	WorldTransform worldTransforms_[kNumPartId];
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
@@ -74,4 +90,5 @@ private: // メンバ変数
 	DebugCamera* debugCamera_ = nullptr;
 
 	float viewangle = 0.0f;
+
 };

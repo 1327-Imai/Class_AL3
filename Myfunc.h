@@ -23,4 +23,7 @@ namespace Myfunc {
 	float dig2rad(float dig);
 	float rad2dig(float rad);
 
+	//q‚ÌWorldTransform‚ğXV‚·‚éŠÖ”
+	void UpdateChildeWorldTransform(WorldTransform& worldTransform);
+
 }

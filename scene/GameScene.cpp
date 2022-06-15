@@ -37,13 +37,51 @@ void GameScene::Initialize() {
 
 #pragma region//worldTransform
 	//ワールドトランスフォームの初期化
-	//親(0番)
-	worldTransforms_[0].Initialize();
+	//大元
+	worldTransforms_[PartId::kRoot].Initialize();
 
-	//子(1番)
-	worldTransforms_[1].Initialize();
-	worldTransforms_[1].translation_ = {0 , 4.5 , 0};
-	worldTransforms_[1].parent_ = &worldTransforms_[0];
+	//脊椎
+	worldTransforms_[PartId::kSpine].Initialize();
+	worldTransforms_[PartId::kSpine].parent_ = &worldTransforms_[PartId::kRoot];
+	worldTransforms_[PartId::kSpine].translation_ = {0 , 4.5f , 0};
+
+	//上半身
+	//胸
+	worldTransforms_[PartId::kChest].Initialize();
+	worldTransforms_[PartId::kChest].parent_ = &worldTransforms_[PartId::kSpine];
+	worldTransforms_[PartId::kChest].translation_ = {0 , 0 , 0};
+
+	//頭
+	worldTransforms_[PartId::kHead].Initialize();
+	worldTransforms_[PartId::kHead].parent_ = &worldTransforms_[PartId::kChest];
+	worldTransforms_[PartId::kHead].translation_ = {0 , 4.5f , 0};
+
+	//左腕
+	worldTransforms_[PartId::kArm_L].Initialize();
+	worldTransforms_[PartId::kArm_L].parent_ = &worldTransforms_[PartId::kChest];
+	worldTransforms_[PartId::kArm_L].translation_ = {4.5f , 0 , 0};
+
+	//右腕					
+	worldTransforms_[PartId::kArm_R].Initialize();
+	worldTransforms_[PartId::kArm_R].parent_ = &worldTransforms_[PartId::kChest];
+	worldTransforms_[PartId::kArm_R].translation_ = {-4.5f , 0 , 0};
+
+
+	//下半身
+	//尻
+	worldTransforms_[PartId::kHip].Initialize();
+	worldTransforms_[PartId::kHip].parent_ = &worldTransforms_[PartId::kSpine];
+	worldTransforms_[PartId::kHip].translation_ = {0 , -4.5f , 0};
+
+	//左足
+	worldTransforms_[PartId::kLeg_L].Initialize();
+	worldTransforms_[PartId::kLeg_L].parent_ = &worldTransforms_[PartId::kHip];
+	worldTransforms_[PartId::kLeg_L].translation_ = {4.5f , -4.5f , 0};
+
+	//右足
+	worldTransforms_[PartId::kLeg_R].Initialize();
+	worldTransforms_[PartId::kLeg_R].parent_ = &worldTransforms_[PartId::kHip];
+	worldTransforms_[PartId::kLeg_R].translation_ = {-4.5f , -4.5f , 0};
 
 #pragma endregion
 
@@ -65,6 +103,7 @@ void GameScene::Update() {
 
 #pragma region//worldTransform
 
+	//親の処理
 	{
 		//キャラクターの移動ベクトル
 		Vector3 move = {0 , 0 , 0};
@@ -80,26 +119,62 @@ void GameScene::Update() {
 		}
 
 		//moveを加算
-		worldTransforms_[0].translation_ += move;
+		worldTransforms_[PartId::kRoot].translation_ += move;
 
 		//アフィン変換用の行列を宣言
 		Matrix4 affineMat = MathUtility::Matrix4Identity();
 
 		//ワールド行列の計算
-		Myfunc::SetMatTranslation(affineMat , worldTransforms_[0].translation_);
-		worldTransforms_[0].matWorld_ *= affineMat;
+		worldTransforms_[PartId::kRoot].matWorld_ = MathUtility::Matrix4Identity();
+
+		Myfunc::SetMatScale(affineMat , worldTransforms_[PartId::kRoot].scale_);
+		Myfunc::SetMatRotation(affineMat , worldTransforms_[PartId::kRoot].rotation_);
+		Myfunc::SetMatTranslation(affineMat , worldTransforms_[PartId::kRoot].translation_);
+
+		worldTransforms_[PartId::kRoot].matWorld_ *= affineMat;
 
 		//行列の転送
-		worldTransforms_->TransferMatrix();
+		worldTransforms_[PartId::kRoot].TransferMatrix();
 
 		//デバッグ表示
 		debugText_->SetPos(50 , 50);
 		debugText_->Printf(
 			"Translation:(%f,%f,%f)" ,
-			worldTransforms_[0].translation_.x ,
-			worldTransforms_[0].translation_.y ,
-			worldTransforms_[0].translation_.z
+			worldTransforms_[PartId::kRoot].translation_.x ,
+			worldTransforms_[PartId::kRoot].translation_.y ,
+			worldTransforms_[PartId::kRoot].translation_.z
 		);
+
+		//回転処理
+		float rotateValue = PI / 36;
+		//上半身回転処理
+		{
+
+			if (input_->PushKey(DIK_U)) {
+				worldTransforms_[PartId::kChest].rotation_.y -= rotateValue;
+			}
+			if (input_->PushKey(DIK_I)) {
+				worldTransforms_[PartId::kChest].rotation_.y += rotateValue;
+			}
+		}
+
+		//下半身回転処理
+		{
+			if (input_->PushKey(DIK_J)) {
+				worldTransforms_[PartId::kHip].rotation_.y -= rotateValue;
+			}
+			if (input_->PushKey(DIK_K)) {
+				worldTransforms_[PartId::kHip].rotation_.y += rotateValue;
+			}
+		}
+	}
+
+	//子の更新
+	{
+
+		for (int i = 1; i < PartId::kNumPartId; i++) {
+			Myfunc::UpdateChildeWorldTransform(worldTransforms_[i]);
+		}
 	}
 
 #pragma endregion
@@ -274,9 +349,15 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	//3Dモデル描画
-	for (WorldTransform& worldTransform_ : worldTransforms_) {
-		model_->Draw(worldTransform_ , viewProjection_ , textureHandle_);
+
+	//for (WorldTransform& worldTransform_ : worldTransforms_) {
+	//	model_->Draw(worldTransform_ , viewProjection_ , textureHandle_);
+	//}
+
+	for (int i = 2; i < PartId::kNumPartId; i++) {
+		model_->Draw(worldTransforms_[i] , viewProjection_ , textureHandle_);
 	}
+
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion

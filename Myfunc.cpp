@@ -78,3 +78,20 @@ float Myfunc::rad2dig(float rad) {
 }
 
 #pragma endregion
+
+//Žq‚ÌWorldTransform‚ðXV‚·‚éŠÖ”
+void Myfunc::UpdateChildeWorldTransform(WorldTransform& worldTransform) {
+	Matrix4 affineMat = MathUtility::Matrix4Identity();
+
+	Myfunc::SetMatScale(affineMat , worldTransform.scale_);
+	Myfunc::SetMatRotation(affineMat , worldTransform.rotation_);
+	Myfunc::SetMatTranslation(affineMat , worldTransform.translation_);
+
+	worldTransform.matWorld_ = MathUtility::Matrix4Identity();
+
+	worldTransform.matWorld_ *= affineMat;
+
+	worldTransform.matWorld_ *= worldTransform.parent_->matWorld_;
+
+	worldTransform.TransferMatrix();
+}

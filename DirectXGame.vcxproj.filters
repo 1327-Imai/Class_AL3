@@ -50,10 +50,10 @@
       <UniqueIdentifier>{647f4977-924a-4954-923f-5619e5afc9a3}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\MySource">
-      <UniqueIdentifier>{dd54bed7-bb6f-4cf9-935d-5de2e642fd62}</UniqueIdentifier>
+      <UniqueIdentifier>{3440bc73-f934-4621-943d-77b4df8d58f9}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\MyHeader">
-      <UniqueIdentifier>{d40a505b-0cb6-4e63-a92d-426b492980a8}</UniqueIdentifier>
+      <UniqueIdentifier>{4f4cfae9-994c-4658-adad-60dac3c50d15}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -161,10 +161,10 @@
     <ClInclude Include="3d\PrimitiveDrawer.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
-    <ClInclude Include="src\Player.h">
+    <ClInclude Include="src\Myfunc.h">
       <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Myfunc.h">
+    <ClInclude Include="src\Player.h">
       <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
   </ItemGroup>

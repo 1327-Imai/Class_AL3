@@ -13,7 +13,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 
-#include "Myfunc.h"
+#include "src/Myfunc.h"
+#include "src/Player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -68,7 +69,7 @@ private: // メンバ変数
 	Audio* audio_ = nullptr;
 	DebugText* debugText_ = nullptr;
 
-	const float PI = 3.141592;
+	const float PI = 3.141592f;
 
 	/// <summary>
 	/// ゲームシーン用
@@ -81,14 +82,14 @@ private: // メンバ変数
 	Model* model_ = nullptr;
 
 	//ワールドトランスフォーム
-	WorldTransform worldTransforms_[kNumPartId];
+	//自キャラ
+	Player* player_ = nullptr;
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
 	//デバッグカメラ
 	DebugCamera* debugCamera_ = nullptr;
-
-	float viewangle = 0.0f;
+	int isDebugCameraActive_ = false;	//デバッグカメラ有効フラグ
 
 };

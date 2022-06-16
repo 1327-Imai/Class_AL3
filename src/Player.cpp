@@ -3,6 +3,8 @@
 #include "DebugText.h"
 #include <cassert>
 
+#include "Myfunc.h"
+
 //コンストラクタの定義
 Player::Player() {
 
@@ -36,10 +38,17 @@ void Player::Initialize(Model* model , uint32_t textureHandle) {
 //更新処理
 void Player::Update() {
 
-	const float speed = 4.0f;
+	//プレイヤーの移動速度を設定
+	const float speed = 0.5f;
+
+	//プレイヤーの移動ベクトル
 	Vector3 move = {0 , 0 , 0};
 
-	//移動ベクトルを変更する処理
+	//移動限界座標
+	const float kMoveLimitX = 34.0f;
+	const float kMoveLimitY = 18.0f;
+
+	//キー入力による移動処理
 	if (input_->PushKey(DIK_LEFT)) {
 		move.x -= speed;
 	}
@@ -47,19 +56,23 @@ void Player::Update() {
 		move.x += speed;
 	}
 	if (input_->PushKey(DIK_UP)) {
-		move.y -= speed;
+		move.y += speed;
 	}
 	if (input_->PushKey(DIK_DOWN)) {
-		move.y += speed;
+		move.y -= speed;
 	}
 
 	//座標移動
-	worldTransform_.translation_.x += move.x;
-	worldTransform_.translation_.y += move.y;
-	worldTransform_.translation_.z += move.z;
+	worldTransform_.translation_ += move;
 
-	//行列の更新
-	worldTransform_.TransferMatrix();
+	//移動限界を超えないようにする処理
+	worldTransform_.translation_.x = max(worldTransform_.translation_.x , -kMoveLimitX);
+	worldTransform_.translation_.x = min(worldTransform_.translation_.x , +kMoveLimitX);
+	worldTransform_.translation_.y = max(worldTransform_.translation_.y , -kMoveLimitY);
+	worldTransform_.translation_.y = min(worldTransform_.translation_.y , +kMoveLimitY);
+
+	//worldTransformの更新
+	Myfunc::UpdateWorldTransform(worldTransform_);
 
 }
 
@@ -68,6 +81,7 @@ void Player::Draw(ViewProjection viewprojection) {
 
 	model_->Draw(worldTransform_ , viewprojection , textureHandle_);
 
+	//デバッグ表示
 	debugText_->SetPos(50 , 150);
 	debugText_->Printf(
 		"worldTransform:(%f,%f,%f)" ,

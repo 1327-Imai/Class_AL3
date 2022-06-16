@@ -49,6 +49,12 @@
     <Filter Include="ヘッダー ファイル\math">
       <UniqueIdentifier>{647f4977-924a-4954-923f-5619e5afc9a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\MySource">
+      <UniqueIdentifier>{dd54bed7-bb6f-4cf9-935d-5de2e642fd62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MyHeader">
+      <UniqueIdentifier>{d40a505b-0cb6-4e63-a92d-426b492980a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,8 +72,11 @@
     <ClCompile Include="scene\GameScene.cpp">
       <Filter>ソース ファイル\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Myfunc.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="src\Myfunc.cpp">
+      <Filter>ソース ファイル\MySource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>ソース ファイル\MySource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,8 +161,11 @@
     <ClInclude Include="3d\PrimitiveDrawer.h">
       <Filter>ヘッダー ファイル\3d</Filter>
     </ClInclude>
-    <ClInclude Include="Myfunc.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="src\Player.h">
+      <Filter>ヘッダー ファイル\MyHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Myfunc.h">
+      <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

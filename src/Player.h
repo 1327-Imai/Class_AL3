@@ -4,6 +4,8 @@
 #include "Input.h"
 #include "DebugText.h"
 
+#include "PlayerBullet.h"
+
 class Player {
 
 public:
@@ -24,6 +26,15 @@ public:
 	//•`‰æˆ—
 	void Draw(ViewProjection viewprojection);
 
+	//ˆÚ“®ˆ—
+	void Move();
+
+	//‰ñ“]ˆ—
+	void Rotate();
+
+	//’e‚Ì”­Ë
+	void ShotBullet();
+
 
 	//ƒƒ“ƒo•Ï”
 private:
@@ -42,5 +53,7 @@ private:
 	//DebugText
 	DebugText* debugText_;
 
+	//’e
+	PlayerBullet* bullet_;
 };
 

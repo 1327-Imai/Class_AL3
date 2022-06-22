@@ -3,7 +3,7 @@
 #pragma region//ワールド変換行列を生成する関数
 
 //スケーリング行列を設定する関数
-void Myfunc::SetMatScale(Matrix4& affineMat , Vector3 scale) {
+void Myfunc::Affine::SetMatScale(Matrix4& affineMat , Vector3 scale) {
 	//スケーリング行列を宣言
 	Matrix4 matScale = {
 		scale.x , 0 , 0 , 0 ,
@@ -18,7 +18,7 @@ void Myfunc::SetMatScale(Matrix4& affineMat , Vector3 scale) {
 }
 
 //回転行列を設定する関数
-void Myfunc::SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
+void Myfunc::Affine::SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
 
 	//回転行列を宣言
 	//Z軸回転
@@ -53,7 +53,7 @@ void Myfunc::SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
 }
 
 //平行移動行列の設定をする関数
-void Myfunc::SetMatTranslation(Matrix4& affineMat , Vector3 translation) {
+void Myfunc::Affine::SetMatTranslation(Matrix4& affineMat , Vector3 translation) {
 
 	//平行移動行列の宣言
 	Matrix4 matTranslation = {
@@ -72,16 +72,16 @@ void Myfunc::SetMatTranslation(Matrix4& affineMat , Vector3 translation) {
 #pragma region//度数法⇔弧度法の関数
 
 //度数法を弧度法に変換する関数
-float Myfunc::Dig2Rad(float dig) {
+float Myfunc::MyMathUtility::Deg2Rad(float Deg) {
 
 	const float PI = 3.141592;
 
-	return dig * PI / 180;
+	return Deg * PI / 180;
 
 }
 
 //弧度法を度数法に変換する関数
-float Myfunc::Rad2Dig(float rad) {
+float Myfunc::MyMathUtility::Rad2Deg(float rad) {
 
 	const float PI = 3.141592;
 
@@ -97,9 +97,9 @@ void Myfunc::UpdateWorldTransform(WorldTransform& worldTransform) {
 	Matrix4 affineMat = MathUtility::Matrix4Identity();
 
 	//ワールド変換行列にスケーリング,回転,平行移動の行列を合成
-	Myfunc::SetMatScale(affineMat , worldTransform.scale_);
-	Myfunc::SetMatRotation(affineMat , worldTransform.rotation_);
-	Myfunc::SetMatTranslation(affineMat , worldTransform.translation_);
+	Myfunc::Affine::SetMatScale(affineMat , worldTransform.scale_);
+	Myfunc::Affine::SetMatRotation(affineMat , worldTransform.rotation_);
+	Myfunc::Affine::SetMatTranslation(affineMat , worldTransform.translation_);
 
 	//ワールド行列に単位行列を代入
 	worldTransform.matWorld_ = MathUtility::Matrix4Identity();

@@ -1,6 +1,6 @@
 #include "Myfunc.h"
 
-#pragma region//ワールド変換行列を生成する関数
+#pragma region//ワールド変換行列を設定する関数
 
 //スケーリング行列を設定する関数
 void Myfunc::Affine::SetMatScale(Matrix4& affineMat , Vector3 scale) {
@@ -66,6 +66,78 @@ void Myfunc::Affine::SetMatTranslation(Matrix4& affineMat , Vector3 translation)
 	//行列の計算
 	affineMat *= matTranslation;
 }
+#pragma endregion
+
+#pragma region//ワールド変換行列を生成する関数
+//スケーリング行列を生成する関数
+Matrix4 Myfunc::Affine::CreateMatScale(Matrix4 affineMat , Vector3 scale) {
+
+	//スケーリング行列を宣言
+	Matrix4 matScale = {
+		scale.x , 0 , 0 , 0 ,
+		0 , scale.y , 0 , 0 ,
+		0 , 0 , scale.z , 0 ,
+		0 , 0 , 0 , 1 ,
+	};
+
+	//行列の計算
+	return matScale;
+
+}
+
+//回転行列を生成する関数
+Matrix4 Myfunc::Affine::CreateMatRotation(Matrix4 affineMat , Vector3 rotation) {
+
+	//回転行列を宣言
+	Matrix4 matRot = MathUtility::Matrix4Identity();
+
+	//Z軸回転
+	Matrix4 matRotZ = {
+		cos(rotation.z) , sin(rotation.z) , 0 , 0 ,
+		-sin(rotation.z) , cos(rotation.z) , 0 , 0 ,
+		0 , 0 , 1 , 0 ,
+		0 , 0 , 0 , 1 ,
+	};
+
+	//X軸回転
+	Matrix4 matRotX = {
+		1 , 0 , 0 , 0 ,
+		0 , cos(rotation.x) , sin(rotation.x) , 0 ,
+		0 , -sin(rotation.x) , cos(rotation.x) , 0 ,
+		0 , 0 , 0 , 1 ,
+	};
+
+	//Y軸回転
+	Matrix4 matRotY = {
+		cos(rotation.y) , 0 , -sin(rotation.y) , 0 ,
+		0 , 1 , 0 , 0 ,
+		sin(rotation.y) , 0 , cos(rotation.y) , 0 ,
+		0 , 0 , 0 , 1 ,
+	};
+
+	//行列の計算
+	matRot *= matRotZ;
+	matRot *= matRotX;
+	matRot *= matRotY;
+
+	return matRot;
+
+}
+
+//平行移動行列の生成をする関数
+Matrix4 Myfunc::Affine::CreateMatTranslation(Matrix4 affineMat , Vector3 translation) {
+
+	//平行移動行列の宣言
+	Matrix4 matTranslation = {
+		1 , 0 , 0 , 0 ,
+		0 , 1 , 0 , 0 ,
+		0 , 0 , 1 , 0 ,
+		translation.x , translation.y , translation.z , 1 ,
+	};
+
+	//行列の計算
+	return matTranslation;
+}
 
 #pragma endregion
 
@@ -91,6 +163,33 @@ float Myfunc::MyMathUtility::Rad2Deg(float rad) {
 
 #pragma endregion
 
+//ベクトルと行列の掛け算をする関数
+Vector3  Myfunc::MyMathUtility::MulVector3AndMatrix4(Vector3 vec , Matrix4 mat) {
+
+	Vector3 ans;
+
+	ans.x = 
+		mat.m[0][0] * vec.x +
+		mat.m[1][0] * vec.y +
+		mat.m[2][0] * vec.z +
+		mat.m[3][0] * 0;
+
+	ans.y =
+		mat.m[0][1] * vec.x +
+		mat.m[1][1] * vec.y +
+		mat.m[2][1] * vec.z +
+		mat.m[3][1] * 0;
+
+	ans.z =
+		mat.m[0][2] * vec.x +
+		mat.m[1][2] * vec.y +
+		mat.m[2][2] * vec.z +
+		mat.m[3][2] * 0;
+
+	return ans;
+
+}
+
 //WorldTransformを更新する関数
 void Myfunc::UpdateWorldTransform(WorldTransform& worldTransform) {
 	//ワールド変換行列を用意
@@ -108,7 +207,7 @@ void Myfunc::UpdateWorldTransform(WorldTransform& worldTransform) {
 	worldTransform.matWorld_ *= affineMat;
 
 	//もし親がある場合
-	if (worldTransform.parent_ != nullptr) {
+	if (worldTransform.parent_) {
 		//親のワールド行列との計算を行う
 		worldTransform.matWorld_ *= worldTransform.parent_->matWorld_;
 	}

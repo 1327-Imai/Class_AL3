@@ -15,7 +15,7 @@ PlayerBullet::~PlayerBullet() {
 
 //メンバ関数
 //初期化
-void PlayerBullet::Initialize(Model* model , const Vector3& position) {
+void PlayerBullet::Initialize(Model* model , const Vector3& position, const Vector3& velocity) {
 
 	//nullポインタチェック
 	assert(model);
@@ -30,12 +30,21 @@ void PlayerBullet::Initialize(Model* model , const Vector3& position) {
 	//引数で受け取った初期座標をセット
 	worldTransform_.translation_ = position;
 
+	//引数で受け取った速度をメンバ変数に代入
+	velocity_ = velocity;
 }
 
 //更新処理
 void PlayerBullet::Update() {
 
+	//座標を移動させる
+	worldTransform_.translation_ += velocity_;
+
 	Myfunc::UpdateWorldTransform(worldTransform_);
+
+	if (--dethTimer_ <= 0) {
+		isDead_ = true;
+	}
 
 }
 

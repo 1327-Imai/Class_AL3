@@ -57,5 +57,11 @@ private:
 
 	//弾
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;
+
+	//発射レート
+	static const int32_t kBulletCT = 5;
+
+	//デスタイマー
+	int32_t bulletTimer_ = kBulletCT;
 };
 

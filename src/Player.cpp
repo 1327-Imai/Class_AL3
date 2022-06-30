@@ -50,6 +50,13 @@ void Player::Update() {
 		bullet->Update();
 	}
 
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
+
+		return bullet->IsDead();
+
+	});
+
 }
 
 //描画処理
@@ -191,17 +198,28 @@ void Player::Rotate() {
 //弾の発射
 void Player::ShotBullet() {
 
-	if (input_->TriggerKey(DIK_SPACE)) {
-		//自キャラの位置をコピー
-		Vector3 position = worldTransform_.translation_;
+	if (input_->PushKey(DIK_SPACE)) {
 
-		//弾を生成し初期化
-		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_ , position);
+		if (bulletTimer_-- <= 0) {
+			//弾の速度
+			const float kBulletSpeed = 1.0f;
+			Vector3 velocity(0 , 0 , kBulletSpeed);
 
-		//弾を登録する
-		bullets_.push_back(std::move(newBullet));
+			//速度ベクトルを自機の向きに合わせて回転させる
+			velocity = Myfunc::MyMathUtility::MulVector3AndMatrix4(velocity , worldTransform_.matWorld_);
 
+			//自キャラの位置をコピー
+			Vector3 position = worldTransform_.translation_;
+
+			//弾を生成し初期化
+			std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+			newBullet->Initialize(model_ , position , velocity);
+
+			//弾を登録する
+			bullets_.push_back(std::move(newBullet));
+		
+			bulletTimer_ = kBulletCT;
+		}
 	}
 
 }

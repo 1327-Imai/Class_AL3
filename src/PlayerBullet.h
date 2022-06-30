@@ -17,17 +17,13 @@ public:
 
 	//メンバ関数
 		//初期化
-	void Initialize(Model* model,const Vector3& position);
+	void Initialize(Model* model , const Vector3& position);
 
 	//更新処理
 	void Update();
 
 	//描画処理
 	void Draw(const ViewProjection& viewprojection);
-
-	//アクセッサ
-	int GetIsShot();
-	void SetIsShot(int isShot);
 
 	//メンバ変数
 private:

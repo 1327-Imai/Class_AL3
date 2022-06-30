@@ -4,6 +4,9 @@
 #include "Input.h"
 #include "DebugText.h"
 
+#include <memory>
+#include <list>
+
 #include "PlayerBullet.h"
 
 class Player {
@@ -35,7 +38,6 @@ public:
 	//弾の発射
 	void ShotBullet();
 
-
 	//メンバ変数
 private:
 	//ワールド変換データ
@@ -54,6 +56,6 @@ private:
 	DebugText* debugText_;
 
 	//弾
-	PlayerBullet* bullet_;
+	std::list<std::unique_ptr<PlayerBullet>> bullets_;
 };
 

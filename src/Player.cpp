@@ -46,8 +46,8 @@ void Player::Update() {
 
 	ShotBullet();
 
-	if (bullet_) {
-		bullet_->Update();
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->Update();
 	}
 
 }
@@ -57,8 +57,8 @@ void Player::Draw(ViewProjection viewprojection) {
 
 	model_->Draw(worldTransform_ , viewprojection , textureHandle_);
 
-	if (bullet_) {
-		bullet_->Draw(viewprojection);
+	for (std::unique_ptr<PlayerBullet>& bullet : bullets_) {
+		bullet->Draw(viewprojection);
 	}
 
 	//デバッグ表示
@@ -192,12 +192,15 @@ void Player::Rotate() {
 void Player::ShotBullet() {
 
 	if (input_->TriggerKey(DIK_SPACE)) {
+		//自キャラの位置をコピー
+		Vector3 position = worldTransform_.translation_;
+
 		//弾を生成し初期化
-		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_ , worldTransform_.translation_);
+		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
+		newBullet->Initialize(model_ , position);
 
 		//弾を登録する
-		bullet_ = newBullet;
+		bullets_.push_back(std::move(newBullet));
 
 	}
 

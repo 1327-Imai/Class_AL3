@@ -26,5 +26,8 @@ private:
 
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
+
+	//移動ベクトル
+	Vector3 move_ = {0.0f , 0.0f , 0.0f};
 };
 

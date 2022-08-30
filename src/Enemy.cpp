@@ -25,8 +25,10 @@ void Enemy::Initialize(Model* model , uint32_t textureHandle) {
 
 //更新処理
 void Enemy::Update() {
+	move_ = {0.0f , 0.0f , 0.0f};
+	move_.z -= 0.5;
 
-	worldTransform_.translation_.z -=0.5;
+	worldTransform_.translation_ += move_;
 
 	//worldTransformの更新
 	Myfunc::UpdateWorldTransform(worldTransform_);

@@ -38,6 +38,10 @@ public:
 	//弾の発射
 	void ShotBullet();
 
+	//アクセッサ
+public:
+	Vector3 GetWorldPosition();
+
 	//メンバ変数
 private:
 	//ワールド変換データ

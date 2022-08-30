@@ -9,6 +9,8 @@
 
 #include "EnemyBullet.h"
 
+class Player;
+
 class Enemy {
 public:
 
@@ -31,6 +33,12 @@ private:
 
 	//弾の発射
 	void ShotBullet();
+
+	//アクセッサ
+public:
+	void SetPlayer(Player* player);
+
+	Vector3 GetWorldPosition();
 
 	//メンバ変数
 private:
@@ -61,5 +69,8 @@ private:
 
 	//デスタイマー
 	int32_t bulletTimer_ = kBulletCT;
+
+	//自キャラ
+	Player* player_ = nullptr;
 };
 

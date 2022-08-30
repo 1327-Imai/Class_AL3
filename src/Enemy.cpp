@@ -5,6 +5,11 @@
 
 #include "Myfunc.h"
 
+class Player {
+public:
+	Vector3 GetWorldPosition();
+};
+
 //メンバ関数の定義
 //初期化
 void Enemy::Initialize(Model* model , uint32_t textureHandle) {
@@ -49,7 +54,7 @@ void Enemy::Update() {
 
 		return bullet->IsDead();
 
-	});
+					   });
 
 	//worldTransformの更新
 	Myfunc::UpdateWorldTransform(worldTransform_);
@@ -87,9 +92,22 @@ void Enemy::Leave() {
 void Enemy::ShotBullet() {
 
 	if (bulletTimer_-- <= 0) {
+		assert(player_);
+
 		//弾の速度
-		const float kBulletSpeed = -1.0f;
-		Vector3 velocity(0 , 0 , kBulletSpeed);
+		const float kBulletSpeed = 0.5f;
+
+		Vector3 playerWorldPos = player_->GetWorldPosition();
+		Vector3 enemyWorldPos = GetWorldPosition();
+
+		Vector3 angle = playerWorldPos;
+		angle -= enemyWorldPos;
+
+		Vector3 velocity = {
+			angle.x / sqrt(angle.x * angle.x + angle.y * angle.y + angle.z * angle.z) * kBulletSpeed ,
+			angle.y / sqrt(angle.x * angle.x + angle.y * angle.y + angle.z * angle.z) * kBulletSpeed ,
+			angle.z / sqrt(angle.x * angle.x + angle.y * angle.y + angle.z * angle.z) * kBulletSpeed ,
+		};
 
 		//敵の位置をコピー
 		Vector3 position = worldTransform_.translation_;
@@ -103,4 +121,19 @@ void Enemy::ShotBullet() {
 
 		bulletTimer_ = kBulletCT;
 	}
+}
+
+void Enemy::SetPlayer(Player* player) {
+	player_ = player;
+}
+
+Vector3 Enemy::GetWorldPosition() {
+
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.translation_.x;
+	worldPos.y = worldTransform_.translation_.y;
+	worldPos.z = worldTransform_.translation_.z;
+
+	return worldPos;
 }

@@ -11,6 +11,8 @@ GameScene::~GameScene() {
 
 	delete model_;
 	delete debugCamera_;
+	delete player_;
+	delete enemy_;
 
 }
 
@@ -40,11 +42,16 @@ void GameScene::Initialize() {
 #pragma region//worldTransform
 	//ワールドトランスフォームの初期化
 
+	//自キャラの生成
+	player_ = new Player();
 	//自キャラの初期化
 	player_->Initialize(model_ , textureHandle_);
 
+	//敵の生成
+	enemy_ = new Enemy();
 	//敵の初期化
 	enemy_->Initialize(model_ , textureHandle_);
+	enemy_->SetPlayer(player_);
 
 #pragma endregion
 

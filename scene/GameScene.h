@@ -84,10 +84,10 @@ private: // メンバ変数
 
 	//ワールドトランスフォーム
 	//自キャラ
-	std::unique_ptr<Player> player_ = std::make_unique<Player>();
+	Player* player_ = nullptr;
 
 	//敵
-	std::unique_ptr <Enemy> enemy_ = std::make_unique<Enemy>();
+	Enemy* enemy_ = nullptr;
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;

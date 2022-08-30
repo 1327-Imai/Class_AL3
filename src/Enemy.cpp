@@ -20,13 +20,24 @@ void Enemy::Initialize(Model* model , uint32_t textureHandle) {
 	worldTransform_.Initialize();
 
 	worldTransform_.translation_.y = 2;
-	worldTransform_.translation_.z = 100;
+	worldTransform_.translation_.z = 10;
+
 }
 
 //更新処理
 void Enemy::Update() {
+	move_ = {0.0f , 0.0f , 0.0f};
 
-	worldTransform_.translation_.z -=0.5;
+	switch (phase_) {
+	case Enemy::Phase::Approach:
+	default:
+	Approach();
+	break;
+
+	case Enemy::Phase::Leave:
+	Leave();
+	break;
+	}
 
 	//worldTransformの更新
 	Myfunc::UpdateWorldTransform(worldTransform_);
@@ -37,4 +48,21 @@ void Enemy::Draw(ViewProjection viewprojection) {
 
 	model_->Draw(worldTransform_ , viewprojection , textureHandle_);
 
+}
+
+void Enemy::Approach() {
+	//移動(ベクトルを加算)
+	move_.z -= 0.1;
+	worldTransform_.translation_ += move_;
+	//既定の位置に到達したら離脱
+	if (worldTransform_.translation_.z < 0.0f) {
+		phase_ = Phase::Leave;
+	}
+}
+
+void Enemy::Leave() {
+	//移動(ベクトルを加算)
+	move_.x -= 0.1;
+	move_.y += 0.1;
+	worldTransform_.translation_ += move_;
 }

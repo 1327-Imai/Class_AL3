@@ -122,7 +122,7 @@ void GameScene::Update() {
 
 		//軸方向の表示を有効にする
 		AxisIndicator::GetInstance()->SetVisible(true);
-		}
+	}
 	else {
 		//viewProjectionの再計算と転送
 		viewProjection_.UpdateMatrix();
@@ -133,7 +133,9 @@ void GameScene::Update() {
 	}
 
 #pragma endregion
-	}
+
+	CheckAllCollisions();
+}
 
 void GameScene::Draw() {
 
@@ -190,6 +192,101 @@ void GameScene::Draw() {
 
 	//デバッグカメラの更新
 	//debugCamera_->Update();
+
+#pragma endregion
+}
+
+//衝突判定と応答
+void GameScene::CheckAllCollisions() {
+	//判定対象AとBの座標
+	Vector3 posA , posB;
+
+	//自弾のリストの取得
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
+	//敵弾のリストの取得
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullets();
+
+#pragma region //自キャラと敵弾の当たり判定
+	//自キャラの座標
+	posA = player_->GetWorldPosition();
+
+	//自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+		//敵弾の座標
+		posB = bullet.get()->GetWorldPosition();
+
+		float l = sqrt(
+			(posB.x - posA.x) * (posB.x - posA.x) +
+			(posB.y - posA.y) * (posB.y - posA.y) +
+			(posB.z - posA.z) * (posB.z - posA.z));
+
+		if (
+			sqrt(
+			(posB.x - posA.x) * (posB.x - posA.x) +
+			(posB.y - posA.y) * (posB.y - posA.y) +
+			(posB.z - posA.z) * (posB.z - posA.z)) <= 2
+			) {
+			player_->Oncollision();
+			bullet.get()->Oncollision();
+		}
+	}
+
+#pragma endregion
+
+#pragma region //自弾と敵キャラの当たり判定
+	//敵キャラの座標
+	posA = enemy_->GetWorldPosition();
+
+	//敵キャラと自弾全ての当たり判定
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+		//敵弾の座標
+		posB = bullet.get()->GetWorldPosition();
+
+		float l = sqrt(
+			(posB.x - posA.x) * (posB.x - posA.x) +
+			(posB.y - posA.y) * (posB.y - posA.y) +
+			(posB.z - posA.z) * (posB.z - posA.z));
+
+		if (
+			sqrt(
+			(posB.x - posA.x) * (posB.x - posA.x) +
+			(posB.y - posA.y) * (posB.y - posA.y) +
+			(posB.z - posA.z) * (posB.z - posA.z)) <= 2
+			) {
+			enemy_->Oncollision();
+			bullet.get()->Oncollision();
+		}
+	}
+
+#pragma endregion
+
+#pragma region //自弾と敵弾の当たり判定
+
+	//自弾の座標
+	for (const std::unique_ptr<PlayerBullet>& pBullet : playerBullets) {
+		posA = pBullet.get()->GetWorldPosition();
+
+		//自弾と敵弾全ての当たり判定
+		for (const std::unique_ptr<EnemyBullet>& eBullet : enemyBullets) {
+			//敵弾の座標
+			posB = eBullet.get()->GetWorldPosition();
+
+			float l = sqrt(
+				(posB.x - posA.x) * (posB.x - posA.x) +
+				(posB.y - posA.y) * (posB.y - posA.y) +
+				(posB.z - posA.z) * (posB.z - posA.z));
+
+			if (
+				sqrt(
+				(posB.x - posA.x) * (posB.x - posA.x) +
+				(posB.y - posA.y) * (posB.y - posA.y) +
+				(posB.z - posA.z) * (posB.z - posA.z)) <= 2
+				) {
+				pBullet.get()->Oncollision();
+				eBullet.get()->Oncollision();
+			}
+		}
+	}
 
 #pragma endregion
 }

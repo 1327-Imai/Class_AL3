@@ -224,6 +224,10 @@ void Player::ShotBullet() {
 
 }
 
+//è’ìÀîªíË
+void Player::Oncollision() {
+}
+
 Vector3 Player::GetWorldPosition() {
 
 	Vector3 worldPos;

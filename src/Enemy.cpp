@@ -36,7 +36,7 @@ void Enemy::Update() {
 	switch (phase_) {
 	case Enemy::Phase::Approach:
 	default:
-	Approach();
+	//Approach();
 	break;
 
 	case Enemy::Phase::Leave:
@@ -54,7 +54,7 @@ void Enemy::Update() {
 
 		return bullet->IsDead();
 
-					   });
+	});
 
 	//worldTransform‚ÌXV
 	Myfunc::UpdateWorldTransform(worldTransform_);
@@ -121,6 +121,10 @@ void Enemy::ShotBullet() {
 
 		bulletTimer_ = kBulletCT;
 	}
+}
+
+//Õ“Ë”»’è
+void Enemy::Oncollision() {
 }
 
 void Enemy::SetPlayer(Player* player) {

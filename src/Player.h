@@ -38,9 +38,17 @@ public:
 	//弾の発射
 	void ShotBullet();
 
+	//衝突判定
+	void Oncollision();
+
 	//アクセッサ
 public:
 	Vector3 GetWorldPosition();
+
+	//弾リストを取得
+	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() {
+		return bullets_;
+	}
 
 	//メンバ変数
 private:
@@ -67,5 +75,6 @@ private:
 
 	//デスタイマー
 	int32_t bulletTimer_ = kBulletCT;
+
 };
 

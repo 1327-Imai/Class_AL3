@@ -36,9 +36,17 @@ private:
 
 	//アクセッサ
 public:
-	void SetPlayer(Player* player);
-
 	Vector3 GetWorldPosition();
+
+	//衝突判定
+	void Oncollision();
+
+	void SetPlayer(Player* player);
+	
+	//弾リストを取得
+	const std::list<std::unique_ptr<EnemyBullet>>& GetBullets() {
+		return bullets_;
+	}
 
 	//メンバ変数
 private:

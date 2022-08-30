@@ -27,6 +27,13 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	//アクセッサ
+public:
+	//衝突判定
+	Vector3 GetWorldPosition();
+
+	void Oncollision();
+
 	//メンバ変数
 private:
 	//ワールド変換データ
@@ -49,6 +56,5 @@ private:
 
 	//デスフラグ
 	bool isDead_ = false;
-
 };
 

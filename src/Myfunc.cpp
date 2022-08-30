@@ -155,7 +155,7 @@ float Myfunc::MyMathUtility::Deg2Rad(float Deg) {
 //弧度法を度数法に変換する関数
 float Myfunc::MyMathUtility::Rad2Deg(float rad) {
 
-	const float PI = 3.141592;
+	const float PI = 3.141592f;
 
 	return rad / PI * 180;
 

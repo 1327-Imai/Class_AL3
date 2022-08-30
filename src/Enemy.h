@@ -4,6 +4,11 @@
 #include "Input.h"
 #include "DebugText.h"
 
+#include <memory>
+#include <list>
+
+#include "EnemyBullet.h"
+
 class Enemy {
 public:
 
@@ -18,9 +23,14 @@ public:
 	void Draw(ViewProjection viewprojection);
 
 private:
+	//接近フェーズの関数
 	void Approach();
 
+	//離脱フェーズの関数
 	void Leave();
+
+	//弾の発射
+	void ShotBullet();
 
 	//メンバ変数
 private:
@@ -43,5 +53,13 @@ private:
 
 	Phase phase_ = Phase::Approach;
 
+	//弾
+	std::list<std::unique_ptr<EnemyBullet>> bullets_;
+
+	//発射レート
+	static const int32_t kBulletCT = 60;
+
+	//デスタイマー
+	int32_t bulletTimer_ = kBulletCT;
 };
 

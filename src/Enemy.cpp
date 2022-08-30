@@ -39,6 +39,18 @@ void Enemy::Update() {
 	break;
 	}
 
+	ShotBullet();
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+		bullet->Update();
+	}
+
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
+
+		return bullet->IsDead();
+
+	});
+
 	//worldTransformの更新
 	Myfunc::UpdateWorldTransform(worldTransform_);
 }
@@ -47,9 +59,12 @@ void Enemy::Update() {
 void Enemy::Draw(ViewProjection viewprojection) {
 
 	model_->Draw(worldTransform_ , viewprojection , textureHandle_);
-
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_) {
+		bullet->Draw(viewprojection);
+	}
 }
 
+//接近フェーズの関数
 void Enemy::Approach() {
 	//移動(ベクトルを加算)
 	move_.z -= 0.1;
@@ -60,9 +75,32 @@ void Enemy::Approach() {
 	}
 }
 
+//離脱フェーズの関数
 void Enemy::Leave() {
 	//移動(ベクトルを加算)
 	move_.x -= 0.1;
 	move_.y += 0.1;
 	worldTransform_.translation_ += move_;
+}
+
+//弾の発射
+void Enemy::ShotBullet() {
+
+	if (bulletTimer_-- <= 0) {
+		//弾の速度
+		const float kBulletSpeed = -1.0f;
+		Vector3 velocity(0 , 0 , kBulletSpeed);
+
+		//敵の位置をコピー
+		Vector3 position = worldTransform_.translation_;
+
+		//弾を生成し初期化
+		std::unique_ptr<EnemyBullet> newBullet = std::make_unique<EnemyBullet>();
+		newBullet->Initialize(model_ , position , velocity);
+
+		//弾を登録する
+		bullets_.push_back(std::move(newBullet));
+
+		bulletTimer_ = kBulletCT;
+	}
 }

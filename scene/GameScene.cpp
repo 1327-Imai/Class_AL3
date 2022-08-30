@@ -11,8 +11,6 @@ GameScene::~GameScene() {
 
 	delete model_;
 	delete debugCamera_;
-	delete player_;
-	delete enemy_;
 
 }
 
@@ -42,14 +40,8 @@ void GameScene::Initialize() {
 #pragma region//worldTransform
 	//ワールドトランスフォームの初期化
 
-	//自キャラの生成
-	player_ = new Player();
-
 	//自キャラの初期化
-	player_->Initialize(model_,textureHandle_);
-
-	//敵の生成
-	enemy_ = new Enemy();
+	player_->Initialize(model_ , textureHandle_);
 
 	//敵の初期化
 	enemy_->Initialize(model_ , textureHandle_);
@@ -123,7 +115,7 @@ void GameScene::Update() {
 
 		//軸方向の表示を有効にする
 		AxisIndicator::GetInstance()->SetVisible(true);
-	}
+		}
 	else {
 		//viewProjectionの再計算と転送
 		viewProjection_.UpdateMatrix();
@@ -134,7 +126,7 @@ void GameScene::Update() {
 	}
 
 #pragma endregion
-}
+	}
 
 void GameScene::Draw() {
 

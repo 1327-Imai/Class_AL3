@@ -74,7 +74,7 @@ void Myfunc::Affine::SetMatTranslation(Matrix4& affineMat , Vector3 translation)
 //度数法を弧度法に変換する関数
 float Myfunc::MyMathUtility::Deg2Rad(float Deg) {
 
-	const float PI = 3.141592;
+	const float PI = 3.141592f;
 
 	return Deg * PI / 180;
 
@@ -83,7 +83,7 @@ float Myfunc::MyMathUtility::Deg2Rad(float Deg) {
 //弧度法を度数法に変換する関数
 float Myfunc::MyMathUtility::Rad2Deg(float rad) {
 
-	const float PI = 3.141592;
+	const float PI = 3.141592f;
 
 	return rad / PI * 180;
 

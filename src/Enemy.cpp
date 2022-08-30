@@ -52,7 +52,7 @@ void Enemy::Draw(ViewProjection viewprojection) {
 
 void Enemy::Approach() {
 	//移動(ベクトルを加算)
-	move_.z -= 0.1;
+	move_.z -= 0.1f;
 	worldTransform_.translation_ += move_;
 	//既定の位置に到達したら離脱
 	if (worldTransform_.translation_.z < 0.0f) {
@@ -62,7 +62,7 @@ void Enemy::Approach() {
 
 void Enemy::Leave() {
 	//移動(ベクトルを加算)
-	move_.x -= 0.1;
-	move_.y += 0.1;
+	move_.x -= 0.1f;
+	move_.y += 0.1f;
 	worldTransform_.translation_ += move_;
 }

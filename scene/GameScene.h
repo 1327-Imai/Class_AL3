@@ -15,6 +15,7 @@
 
 #include "src/Myfunc.h"
 #include "src/Player.h"
+#include "src/Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -84,6 +85,9 @@ private: // メンバ変数
 	//ワールドトランスフォーム
 	//自キャラ
 	Player* player_ = nullptr;
+
+	//敵
+	Enemy* enemy_ = nullptr;
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;

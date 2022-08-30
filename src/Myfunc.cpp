@@ -146,7 +146,7 @@ Matrix4 Myfunc::Affine::CreateMatTranslation(Matrix4 affineMat , Vector3 transla
 //度数法を弧度法に変換する関数
 float Myfunc::MyMathUtility::Deg2Rad(float Deg) {
 
-	const float PI = 3.141592;
+	const float PI = 3.141592f;
 
 	return Deg * PI / 180;
 

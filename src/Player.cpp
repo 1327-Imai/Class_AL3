@@ -1,13 +1,13 @@
 #include "Player.h"
 #include "Input.h"
-#include "DebugText.h"
 #include <cassert>
 
 #include "Myfunc.h"
 
 //コンストラクタの定義
 Player::Player() {
-
+	input_ = nullptr;
+	debugText_ = nullptr;
 }
 
 //デストラクタの定義

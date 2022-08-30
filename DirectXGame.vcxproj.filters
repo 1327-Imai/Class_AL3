@@ -81,6 +81,9 @@
     <ClCompile Include="src\PlayerBullet.cpp">
       <Filter>ソース ファイル\MySource</Filter>
     </ClCompile>
+    <ClCompile Include="src\Enemy.cpp">
+      <Filter>ソース ファイル\MySource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -171,6 +174,9 @@
       <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
     <ClInclude Include="src\PlayerBullet.h">
+      <Filter>ヘッダー ファイル\MyHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Enemy.h">
       <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
   </ItemGroup>

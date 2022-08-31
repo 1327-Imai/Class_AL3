@@ -16,6 +16,7 @@
 #include "src/Myfunc.h"
 #include "src/Player.h"
 #include "src/Enemy.h"
+#include "src/Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -84,6 +85,7 @@ private: // メンバ変数
 
 	//3Dモデル
 	Model* model_ = nullptr;
+	Model* modelSkydome_ = nullptr;
 
 	//ワールドトランスフォーム
 	//自キャラ
@@ -91,6 +93,8 @@ private: // メンバ変数
 
 	//敵
 	Enemy* enemy_ = nullptr;
+
+	Skydome* skydome_ = nullptr;
 
 	//ビュープロジェクション
 	ViewProjection viewProjection_;

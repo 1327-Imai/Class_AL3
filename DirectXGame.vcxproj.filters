@@ -87,6 +87,9 @@
     <ClCompile Include="src\EnemyBullet.cpp">
       <Filter>ソース ファイル\MySource</Filter>
     </ClCompile>
+    <ClCompile Include="src\Skydome.cpp">
+      <Filter>ソース ファイル\MySource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -183,6 +186,9 @@
       <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
     <ClInclude Include="src\EnemyBullet.h">
+      <Filter>ヘッダー ファイル\MyHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Skydome.h">
       <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
   </ItemGroup>

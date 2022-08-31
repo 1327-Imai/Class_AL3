@@ -104,6 +104,7 @@
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="src\Myfunc.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Skydome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\DebugText.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="src\Myfunc.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PlayerBullet.h" />
+    <ClInclude Include="src\Skydome.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\Obj.hlsli" />

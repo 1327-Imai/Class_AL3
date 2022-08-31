@@ -13,6 +13,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete player_;
 	delete enemy_;
+	delete modelSkydome_;
 
 }
 
@@ -28,6 +29,8 @@ void GameScene::Initialize() {
 
 	//3Dモデルの生成
 	model_ = Model::Create();
+
+	modelSkydome_ = Model::CreateFromOBJ("Skydome" , true);
 
 #pragma region//乱数生成の下準備
 	//乱数シード生成器
@@ -52,6 +55,9 @@ void GameScene::Initialize() {
 	//敵の初期化
 	enemy_->Initialize(model_ , textureHandle_);
 	enemy_->SetPlayer(player_);
+
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_);
 
 #pragma endregion
 
@@ -83,6 +89,8 @@ void GameScene::Update() {
 
 	//敵の更新
 	enemy_->Update();
+
+	skydome_->Update();
 
 #pragma endregion
 
@@ -171,6 +179,7 @@ void GameScene::Draw() {
 	//敵の描画
 	enemy_->Draw(viewProjection_);
 
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

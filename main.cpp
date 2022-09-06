@@ -7,7 +7,7 @@
 #include "PrimitiveDrawer.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+int WINAPI WinMain(HINSTANCE , HINSTANCE , LPSTR , int) {
 	WinApp* win = nullptr;
 	DirectXCommon* dxCommon = nullptr;
 	// 汎用機能
@@ -20,7 +20,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
-	win->CreateGameWindow("LE2B_イマイ_タケシ_AL3");
+	win->CreateGameWindow("Cubic");
 
 	// DirectX初期化処理
 	dxCommon = DirectXCommon::GetInstance();
@@ -40,7 +40,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	TextureManager::Load("white1x1.png");
 
 	// スプライト静的初期化
-	Sprite::StaticInitialize(dxCommon->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
+	Sprite::StaticInitialize(dxCommon->GetDevice() , WinApp::kWindowWidth , WinApp::kWindowHeight);
 
 	// デバッグテキスト初期化
 	debugText = DebugText::GetInstance();
@@ -93,6 +93,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ゲームウィンドウの破棄
 	win->TerminateGameWindow();
+
+	//ID3D12DebugDevice* debugInterface;
+
+	//if (SUCCEEDED(dxCommon->GetDevice()->QueryInterface(&debugInterface))) {
+	//	debugInterface->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
+	//	debugInterface->Release();
+	//}
 
 	return 0;
 }

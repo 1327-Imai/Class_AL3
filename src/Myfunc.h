@@ -18,6 +18,9 @@ namespace Myfunc {
 		//ワールド変換行列を設定する関数
 		void SetMatScale(Matrix4& affineMat , Vector3 scale);				//スケーリング行列を設定する関数
 		void SetMatRotation(Matrix4& affineMat , Vector3 rotation);			//回転行列を設定する関数
+		void SetMatRotationZ(Matrix4& affineMat , Vector3 rotation);			//Z回転行列を設定する関数
+		void SetMatRotationX(Matrix4& affineMat , Vector3 rotation);			//X回転行列を設定する関数
+		void SetMatRotationY(Matrix4& affineMat , Vector3 rotation);			//Y回転行列を設定する関数
 		void SetMatTranslation(Matrix4& affineMat , Vector3 translation);	//平行移動行列の設定をする関数
 
 		//ワールド変換行列を生成する関数
@@ -33,6 +36,8 @@ namespace Myfunc {
 
 		//ベクトルと行列の掛け算をする関数
 		Vector3 MulVector3AndMatrix4(Vector3 vec , Matrix4 mat);
+
+		Matrix4 MulMatrix4(Matrix4 mat1 , Matrix4 mat2);
 	}
 
 	//WorldTransformを更新する関数

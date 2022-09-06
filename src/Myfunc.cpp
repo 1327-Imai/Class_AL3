@@ -20,23 +20,80 @@ void Myfunc::Affine::SetMatScale(Matrix4& affineMat , Vector3 scale) {
 //‰ñ“]s—ñ‚ğİ’è‚·‚éŠÖ”
 void Myfunc::Affine::SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
 
+	////‰ñ“]s—ñ‚ğéŒ¾
+	////Z²‰ñ“]
+	//Matrix4 matRotZ = {
+	//	cos(rotation.z) , sin(rotation.z) , 0 , 0 ,
+	//	-sin(rotation.z) , cos(rotation.z) , 0 , 0 ,
+	//	0 , 0 , 1 , 0 ,
+	//	0 , 0 , 0 , 1 ,
+	//};
+
+	////X²‰ñ“]
+	//Matrix4 matRotX = {
+	//	1 , 0 , 0 , 0 ,
+	//	0 , cos(rotation.x) , sin(rotation.x) , 0 ,
+	//	0 , -sin(rotation.x) , cos(rotation.x) , 0 ,
+	//	0 , 0 , 0 , 1 ,
+	//};
+
+	////Y²‰ñ“]
+	//Matrix4 matRotY = {
+	//	cos(rotation.y) , 0 , -sin(rotation.y) , 0 ,
+	//	0 , 1 , 0 , 0 ,
+	//	sin(rotation.y) , 0 , cos(rotation.y) , 0 ,
+	//	0 , 0 , 0 , 1 ,
+	//};
+
+	////s—ñ‚ÌŒvZ
+	//affineMat *= matRotZ;
+	//affineMat *= matRotX;
+	//affineMat *= matRotY;
+
+	Myfunc::Affine::SetMatRotationZ(affineMat , rotation);
+	Myfunc::Affine::SetMatRotationX(affineMat , rotation);
+	Myfunc::Affine::SetMatRotationY(affineMat , rotation);
+
+}
+
+//‰ñ“]s—ñ‚ğİ’è‚·‚éŠÖ”
+void Myfunc::Affine::SetMatRotationZ(Matrix4& affineMat , Vector3 rotation) {
+
 	//‰ñ“]s—ñ‚ğéŒ¾
 	//Z²‰ñ“]
 	Matrix4 matRotZ = {
-		cos(rotation.z) , sin(rotation.z) , 0 , 0 ,
-		-sin(rotation.z) , cos(rotation.z) , 0 , 0 ,
+		cos(rotation.z) , -sin(rotation.z) , 0 , 0 ,
+		sin(rotation.z) , cos(rotation.z) , 0 , 0 ,
 		0 , 0 , 1 , 0 ,
 		0 , 0 , 0 , 1 ,
 	};
 
+	//s—ñ‚ÌŒvZ
+	affineMat *= matRotZ;
+
+}
+
+//‰ñ“]s—ñ‚ğİ’è‚·‚éŠÖ”
+void Myfunc::Affine::SetMatRotationX(Matrix4& affineMat , Vector3 rotation) {
+
+	//‰ñ“]s—ñ‚ğéŒ¾
 	//X²‰ñ“]
 	Matrix4 matRotX = {
 		1 , 0 , 0 , 0 ,
-		0 , cos(rotation.x) , sin(rotation.x) , 0 ,
-		0 , -sin(rotation.x) , cos(rotation.x) , 0 ,
+		0 , cos(rotation.x) , -sin(rotation.x) , 0 ,
+		0 , sin(rotation.x) , cos(rotation.x) , 0 ,
 		0 , 0 , 0 , 1 ,
 	};
 
+	//s—ñ‚ÌŒvZ
+	affineMat *= matRotX;
+
+}
+
+//‰ñ“]s—ñ‚ğİ’è‚·‚éŠÖ”
+void Myfunc::Affine::SetMatRotationY(Matrix4& affineMat , Vector3 rotation) {
+
+	//‰ñ“]s—ñ‚ğéŒ¾
 	//Y²‰ñ“]
 	Matrix4 matRotY = {
 		cos(rotation.y) , 0 , -sin(rotation.y) , 0 ,
@@ -46,8 +103,6 @@ void Myfunc::Affine::SetMatRotation(Matrix4& affineMat , Vector3 rotation) {
 	};
 
 	//s—ñ‚ÌŒvZ
-	affineMat *= matRotZ;
-	affineMat *= matRotX;
 	affineMat *= matRotY;
 
 }
@@ -188,6 +243,21 @@ Vector3  Myfunc::MyMathUtility::MulVector3AndMatrix4(Vector3 vec , Matrix4 mat) 
 
 	return ans;
 
+}
+
+Matrix4 Myfunc::MyMathUtility::MulMatrix4(Matrix4 mat1 , Matrix4 mat2) {
+	Matrix4 ans;
+
+	ans = MathUtility::Matrix4Identity();
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			for (int k = 0; k < 4; k++) {
+				ans.m[i][j] += mat1.m[i][k] * mat2.m[k][j];
+			}
+		}
+	}
+	return ans;
 }
 
 //WorldTransform‚ğXV‚·‚éŠÖ”

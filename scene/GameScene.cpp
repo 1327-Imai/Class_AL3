@@ -12,8 +12,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete debugCamera_;
 	delete player_;
-	delete enemy_;
-	delete modelSkydome_;
+	delete enemyController_;
 
 }
 
@@ -24,13 +23,8 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
 
-	//ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("mario.jpg");
-
 	//3Dモデルの生成
 	model_ = Model::Create();
-
-	modelSkydome_ = Model::CreateFromOBJ("Skydome" , true);
 
 #pragma region//乱数生成の下準備
 	//乱数シード生成器
@@ -48,22 +42,23 @@ void GameScene::Initialize() {
 	//自キャラの生成
 	player_ = new Player();
 	//自キャラの初期化
-	player_->Initialize(model_ , textureHandle_);
+	player_->Initialize(model_);
 
-	//敵の生成
-	enemy_ = new Enemy();
-	//敵の初期化
-	enemy_->Initialize(model_ , textureHandle_);
-	enemy_->SetPlayer(player_);
+#pragma endregion
 
-	skydome_ = new Skydome();
-	skydome_->Initialize(modelSkydome_);
+#pragma region//ゲームオブジェクトの制御クラス
+	//エネミーコントローラの作成
+	enemyController_ = new EnemyController();
+	//初期化
+	enemyController_->Initialize(model_);
+	enemyController_->SetPlayer(player_);
 
 #pragma endregion
 
 #pragma region//viewProjection
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
+
 #pragma endregion 
 
 #pragma region//debugCamera
@@ -82,15 +77,21 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
+	if (input_->TriggerKey(DIK_R)) {
+		player_->Initialize(model_);
+
+		//初期化
+		enemyController_->Initialize(model_);
+		enemyController_->SetPlayer(player_);
+	}
+
 #pragma region//worldTransform
 
 	//自キャラの更新
-	player_->Update();
+	player_->Update(viewProjection_);
 
 	//敵の更新
-	enemy_->Update();
-
-	skydome_->Update();
+	enemyController_->Update();
 
 #pragma endregion
 
@@ -177,9 +178,7 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 
 	//敵の描画
-	enemy_->Draw(viewProjection_);
-
-	skydome_->Draw(viewProjection_);
+	enemyController_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -193,11 +192,15 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	player_->DrawUI();
+
 	// デバッグテキストの描画
 	debugText_->DrawAll(commandList);
 	//
 	// スプライト描画後処理
 	Sprite::PostDraw();
+
+
 
 	//デバッグカメラの更新
 	//debugCamera_->Update();
@@ -212,73 +215,22 @@ void GameScene::CheckAllCollisions() {
 
 	//自弾のリストの取得
 	const std::list<std::unique_ptr<PlayerBullet>>& playerBullets = player_->GetBullets();
-	//敵弾のリストの取得
-	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy_->GetBullets();
+
+	//敵のリストの取得
+	const std::list<std::unique_ptr<Enemy>>& enemies = enemyController_->GetEnemyList();
+
 
 #pragma region //自キャラと敵弾の当たり判定
 	//自キャラの座標
 	posA = player_->GetWorldPosition();
 
-	//自キャラと敵弾全ての当たり判定
-	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
-		//敵弾の座標
-		posB = bullet.get()->GetWorldPosition();
-
-		float l = sqrt(
-			(posB.x - posA.x) * (posB.x - posA.x) +
-			(posB.y - posA.y) * (posB.y - posA.y) +
-			(posB.z - posA.z) * (posB.z - posA.z));
-
-		if (
-			sqrt(
-			(posB.x - posA.x) * (posB.x - posA.x) +
-			(posB.y - posA.y) * (posB.y - posA.y) +
-			(posB.z - posA.z) * (posB.z - posA.z)) <= 2
-			) {
-			player_->Oncollision();
-			bullet.get()->Oncollision();
-		}
-	}
-
-#pragma endregion
-
-#pragma region //自弾と敵キャラの当たり判定
-	//敵キャラの座標
-	posA = enemy_->GetWorldPosition();
-
-	//敵キャラと自弾全ての当たり判定
-	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
-		//敵弾の座標
-		posB = bullet.get()->GetWorldPosition();
-
-		float l = sqrt(
-			(posB.x - posA.x) * (posB.x - posA.x) +
-			(posB.y - posA.y) * (posB.y - posA.y) +
-			(posB.z - posA.z) * (posB.z - posA.z));
-
-		if (
-			sqrt(
-			(posB.x - posA.x) * (posB.x - posA.x) +
-			(posB.y - posA.y) * (posB.y - posA.y) +
-			(posB.z - posA.z) * (posB.z - posA.z)) <= 2
-			) {
-			enemy_->Oncollision();
-			bullet.get()->Oncollision();
-		}
-	}
-
-#pragma endregion
-
-#pragma region //自弾と敵弾の当たり判定
-
-	//自弾の座標
-	for (const std::unique_ptr<PlayerBullet>& pBullet : playerBullets) {
-		posA = pBullet.get()->GetWorldPosition();
-
-		//自弾と敵弾全ての当たり判定
-		for (const std::unique_ptr<EnemyBullet>& eBullet : enemyBullets) {
+	for (const std::unique_ptr<Enemy>& enemy : enemies) {
+		//敵弾のリストの取得
+		const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy->GetBullets();
+		//自キャラと敵弾全ての当たり判定
+		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
 			//敵弾の座標
-			posB = eBullet.get()->GetWorldPosition();
+			posB = bullet.get()->GetWorldPosition();
 
 			float l = sqrt(
 				(posB.x - posA.x) * (posB.x - posA.x) +
@@ -291,8 +243,70 @@ void GameScene::CheckAllCollisions() {
 				(posB.y - posA.y) * (posB.y - posA.y) +
 				(posB.z - posA.z) * (posB.z - posA.z)) <= 2
 				) {
-				pBullet.get()->Oncollision();
-				eBullet.get()->Oncollision();
+				player_->Oncollision();
+				bullet.get()->Oncollision();
+			}
+		}
+	}
+#pragma endregion
+
+#pragma region //自キャラシールドと敵弾の当たり判定
+	//自キャラシールドの座標
+	for (int i = 0; i < 6; i++) {
+		if (player_->GetIsPlayerShieldBrake(i) == false) {
+			posA = player_->GetShieldWorldPosition(i);
+
+			for (const std::unique_ptr<Enemy>& enemy : enemies) {
+				//敵弾のリストの取得
+				const std::list<std::unique_ptr<EnemyBullet>>& enemyBullets = enemy->GetBullets();
+				//自キャラシールドと敵弾全ての当たり判定
+				for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullets) {
+					//敵弾の座標
+					posB = bullet.get()->GetWorldPosition();
+
+					float l = sqrt(
+						(posB.x - posA.x) * (posB.x - posA.x) +
+						(posB.y - posA.y) * (posB.y - posA.y) +
+						(posB.z - posA.z) * (posB.z - posA.z));
+
+					if (
+						sqrt(
+						(posB.x - posA.x) * (posB.x - posA.x) +
+						(posB.y - posA.y) * (posB.y - posA.y) +
+						(posB.z - posA.z) * (posB.z - posA.z)) <= 2
+						) {
+						player_->ShieldOncollision(i);
+						bullet.get()->Oncollision();
+					}
+				}
+			}
+		}
+	}
+#pragma endregion
+
+#pragma region //自弾と敵キャラの当たり判定
+	//敵キャラの座標
+	for (const std::unique_ptr<Enemy>& enemy : enemies) {
+		posA = enemy->GetWorldPosition();
+
+		//敵キャラと自弾全ての当たり判定
+		for (const std::unique_ptr<PlayerBullet>& bullet : playerBullets) {
+			//敵弾の座標
+			posB = bullet.get()->GetWorldPosition();
+
+			float l = sqrt(
+				(posB.x - posA.x) * (posB.x - posA.x) +
+				(posB.y - posA.y) * (posB.y - posA.y) +
+				(posB.z - posA.z) * (posB.z - posA.z));
+
+			if (
+				sqrt(
+				(posB.x - posA.x) * (posB.x - posA.x) +
+				(posB.y - posA.y) * (posB.y - posA.y) +
+				(posB.z - posA.z) * (posB.z - posA.z)) <= 3
+				) {
+				enemy->Oncollision();
+				bullet.get()->Oncollision();
 			}
 		}
 	}

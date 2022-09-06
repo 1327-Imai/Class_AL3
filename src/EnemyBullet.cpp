@@ -22,7 +22,7 @@ void EnemyBullet::Initialize(Model* model , const Vector3& position , const Vect
 
 	//引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
-	textureHandle_ = TextureManager::Load("red1x1.png");
+	textureHandle_ = TextureManager::Load("red.png");
 
 	//ワールド変換の初期化
 	worldTransform_.Initialize();

@@ -87,7 +87,10 @@
     <ClCompile Include="src\EnemyBullet.cpp">
       <Filter>ソース ファイル\MySource</Filter>
     </ClCompile>
-    <ClCompile Include="src\Skydome.cpp">
+    <ClCompile Include="src\PlayerShield.cpp">
+      <Filter>ソース ファイル\MySource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnemyController.cpp">
       <Filter>ソース ファイル\MySource</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,9 +149,6 @@
     <ClInclude Include="base\WinApp.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
-    <ClInclude Include="scene\GameScene.h">
-      <Filter>ヘッダー ファイル\scene</Filter>
-    </ClInclude>
     <ClInclude Include="input\Input.h">
       <Filter>ヘッダー ファイル\input</Filter>
     </ClInclude>
@@ -188,7 +188,13 @@
     <ClInclude Include="src\EnemyBullet.h">
       <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Skydome.h">
+    <ClInclude Include="src\PlayerShield.h">
+      <Filter>ヘッダー ファイル\MyHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\GameScene.h">
+      <Filter>ヘッダー ファイル\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EnemyController.h">
       <Filter>ヘッダー ファイル\MyHeader</Filter>
     </ClInclude>
   </ItemGroup>
